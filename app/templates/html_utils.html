@@ -1,0 +1,103 @@
+{% macro css_file(filename) %}
+    <link href="{{ url_for('static',filename=filename) }}" rel="stylesheet" xmlns="http://www.w3.org/1999/html">
+{% endmacro %}
+
+{% macro js_file(filename) %}
+    <script src="{{ url_for('static',filename=filename) }}"></script>
+{% endmacro %}
+
+{% macro table_select(id) %}
+    <td class="table_select_cell">
+        {% if id == "all" %}
+            <input type='checkbox' class="table_select_all">
+        {% else %}
+            <input type="checkbox" class="table_select_id" value="{{ id }}">
+        {% endif %}
+    </td>
+{% endmacro %}
+
+{% macro confirm_dialog(id, title, content) %}
+
+    <div id="{{ id }}" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ title }}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <p>{{ content | safe }}</p>
+                    <div id="set" style="display: none"> <h3>回测数据误差超过你设定的值</h3></div>
+                    <div id="error_range" style="display: none">
+                        <div>
+                            水平误差
+                            <label id="s_delta"></label>
+                        </div>
+                        <div>
+                            垂直误差
+                            <label id="v_delta"></label>
+                        </div>
+                    </div>
+                    <div id="adjust" style="display: none">
+                        本次误差纠正节段数
+                        <select id="adjust_length_picker" class="selectpicker show-tick form-control" data-width="50%">
+                            <option value=1 selected>1</option>
+                        </select>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button id="dismiss_btn" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro no_survey_data_dialog(id, title,content) %}
+    <div id="{{ id }}" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ title }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{{ content | safe }}</p>
+                </div>
+                <div class="modal-footer">
+                    {#                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>#}
+                    <button type="button" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro model_casted_complete_dialog(id, title,content) %}
+    <div id="{{ id }}" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ title }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{{ content | safe }}</p>
+                </div>
+                <div class="modal-footer">
+                    {#                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>#}
+                    <button type="button" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

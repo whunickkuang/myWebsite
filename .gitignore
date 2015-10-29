@@ -1,0 +1,12 @@
+config.py
+venv/
+node_modules/
+bower_components/
+.idea/
+.vagrant/
+__pycache__/
+*.pyc
+*.sqlite
+*.bak
+.DS_Store
+

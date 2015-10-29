@@ -1,0 +1,203 @@
+{% extends "admin_list_base.html" %}
+{% from "html_utils.html" import table_select %}
+{% set activeMenu = "menu_user_management" %}
+{% block mainTitle %}人员管理{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+        </li>
+        <li>
+            <a href="{{ url_for('main.admin_user_list') }}">人员列表</a>
+        </li>
+            <li class="active">
+                <strong>{{  user.user_name }}</strong>
+            </li>
+    </ol>
+{% endblock %}
+{% block notes %}
+    <div class="ibox ibox-title">
+    <div class="col-md-1"> 用户名：</div>
+        <div class="col-md-1">{{ user.user_name }}</div>
+        <div class="col-md-5 text-right">项目：</div>
+        <div class="col col-md-2">{{ project.project_name}}</div>
+</div>
+
+ {% endblock %}
+{% block otherjs %}
+    <script type=text/javascript>
+    $(document).ready(function(){
+
+       var roleName="{{ item.user_project_role}}";
+       var userPermission="{{  item.user_project_permission}}";
+       function checkPermission(userPermission){
+          if((userPermission & 1)==1){$("#1").prop("checked",true);}
+          if((userPermission & 2)==2){$("#2").prop("checked",true);}
+          if((userPermission & 4)==4){$("#4").prop("checked",true);}
+          if((userPermission & 8)==8){$("#8").prop("checked",true);}
+          if((userPermission & 16)==16){$("#16").prop("checked",true);}
+          if((userPermission & 32)==32){$("#32").prop("checked",true);}
+          if((userPermission & 64)==64){$("#64").prop("checked",true);}
+          if((userPermission & 128)==128){$("#128").prop("checked",true);}
+          }
+
+       if(roleName=="监控人员"){
+               $('#select_role')[0].selectedIndex = 1;
+               checkPermission(userPermission);
+
+{#               $("#1").prop("checked",true);#}
+{#               $("#2").prop("checked",true);#}
+{#               $("#4").prop("checked",true);#}
+{#               $("#8").prop("checked",true);#}
+{#               $("#16").prop("checked",true);#}
+{#               $("#128").prop("checked",true);#}
+       }
+       if(roleName=="项目管理员"){
+               $('#select_role')[0].selectedIndex = 3;
+               checkPermission(userPermission);
+{#               $("[name = input]:checkbox").prop("checked",true);#}
+       }
+       if(roleName=="监理人员"){
+               $('#select_role')[0].selectedIndex = 0;
+               checkPermission(userPermission);
+{#               $("#16").prop("checked",true);#}
+{#               $("#32").prop("checked",true);#}
+       }
+       if(roleName=="施工单位" ||roleName=="None"||roleName=="未分配权限"){
+               $('#select_role')[0].selectedIndex = 2;
+               checkPermission(userPermission);
+{#               $("#1").prop("checked",true);#}
+{#               $("#4").prop("checked",true);#}
+{#               $("#8").prop("checked",true);#}
+{#               $("#16").prop("checked",true);#}
+{#               $("#64").prop("checked",true);#}
+       }
+       $("[name='input']:checkbox").each(function(){
+
+{#                   alert('1')#}
+                        });
+
+
+   });
+
+       function getRole(roleValue){
+{#                 alert("{{ user.user_name}}");#}
+               $("[name = input]:checkbox").prop("checked",false);
+               if(roleValue=="0"){
+               $("#8").prop("checked",true);
+               $("#16").prop("checked",true);
+               $("#32").prop("checked",true);
+               }
+               if(roleValue=="1"){
+               $("#1").prop("checked",true);
+               $("#2").prop("checked",true);
+               $("#4").prop("checked",true);
+               $("#8").prop("checked",true);
+               $("#16").prop("checked",true);
+               $("#128").prop("checked",true);
+               }
+               if(roleValue=="2"){
+{#               $("#1").prop("checked",true);#}
+{#               $("#4").prop("checked",true);#}
+               $("#8").prop("checked",true);
+               $("#16").prop("checked",true);
+               $("#64").prop("checked",true);
+               }
+               if(roleValue=="3"){
+               $("[name = input]:checkbox").prop("checked",true);
+               }
+
+        }
+    $(function () {
+            $("a#table_btn_confirm").bind("click", function () {
+                var role=$("#select_role  option:selected").text();
+                var permissions = [];
+                $("[name='input']:checked").each(function(){
+                   permissions.push($(this).val());
+                        });
+                $.ajax({
+                          url: "{{ url_for('main.admin_user_permission',projectId=project.project_id,userId=user.user_id) }}",
+                          type: "POST",
+                          data: {permissions: permissions, role:role}
+                }).done(function() {
+                          window.location = "{{ url_for('main.admin_user_list') }}";
+                });
+            });
+        });
+
+    </script>
+{% endblock %}
+{% block mainContent %}
+    <div class="ibox ibox-content">
+    <div id="table_toolbar" class="btn-group" role="group">
+        <div class="col-md-8" style="padding-left: 0px">
+            <select id="select_role" class="selectpicker show-tick" onchange="getRole(this.value)">
+                <option value="0">监理人员</option>
+                <option value="1">监控人员</option>
+                <option value="2" selected>施工单位</option>
+                <option value="3">项目管理员</option>
+            </select>
+        </div>
+        <div class="col-md-1">
+            <a id="table_btn_confirm" class='btn btn-primary' onclick="postRole()"><i class="glyphicon glyphicon-plus"></i> 保存</a>
+        </div>
+    </div>
+            <table id="dataTable" class="table table-bordered table-striped table-hover" cellspacing="0" style="dsplay:none">
+                <thead>
+                <tr>
+
+                    <th>选项</th>
+                    <th>权限名称 </th>
+                    <th>权限描述 </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><input type="checkbox" name="input" value="1" id="1"></td>
+                    <td>查看项目</td>
+                    <td>能够查看项目的一些基本信息</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="input" value="2" id="2"></td>
+                    <td>台座管理</td>
+                    <td>能够新建台座，查看台座中的模型，导入模型到台座</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="input" value="4" id="4"></td>
+                    <td>查看模型</td>
+                    <td>能够查看模型列表状态，不能查看模型文件，可以查看一些实际的节点节段信息</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="input" value="8" id="8"></td>
+                    <td>查看回测数据</td>
+                    <td>查看回测数据信息，并且能够导出</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="input" value="16" id="16"></td>
+                    <td>查看施工指令</td>
+                    <td>查看施工指令信息，并且能够导出</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="input" value="32" id="32"></td>
+                    <td>审核回测数据</td>
+                    <td>审核回测数据信息，并且能够导出</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="input" value="64" id="64"></td>
+                    <td>上传回测数据</td>
+                    <td>上传回测数据信息，并且能够导出</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="input" value="128" id="128"></td>
+                    <td>上传模型</td>
+                    <td>能够上传模型，能够查看理想浇筑信息，传统的监控人员</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="input" value="256" id="256"></td>
+                    <td>人员管理</td>
+                    <td>能够给人员进行授权</td>
+                </tr>
+                </tbody>
+            </table>
+</div>
+{% endblock %}

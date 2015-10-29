@@ -1,0 +1,768 @@
+{% extends "admin_edit_base.html" %}
+{% from "html_utils.html" import confirm_dialog%}
+{% set activeMenu = "menu_surveyed_data_management" %}
+{% block mainTitle %}回测数据管理{% endblock %}
+{% block otherjs %}
+    <script type="text/javascript">
+     $("#showorderData").click(function () {
+            if ($("#showorderData").prop("checked") == true) {
+            $(".order").css("display", "block");
+            }
+            if ($("#showorderData").prop("checked") == false) {
+
+                $(".order").css("display", "none");
+
+
+            }
+        });
+
+    $("#simplyFlag").click(function () {
+
+            if ($("#simplyFlag").prop("checked") == true) {
+
+                $("#simply").css("display", "block");
+                $("#complete").css("display", "none");
+            }
+            if ($("#simplyFlag").prop("checked") == false) {
+
+                $("#simply").css("display", "none");
+                $("#complete").css("display", "block");
+
+            }
+        });
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        $("#table_btn_new").click(function () {
+            $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_check_survey_data_out') }}', {}, function (data) {
+                var result = data.checkOut;
+
+                if (result['outRange'] == 1) {
+                    $("#confirm_error_range").modal('show');
+                    var confirm_btn = $("#confirm_error_range .btn-primary");
+                    var close_btn = $("#confirm_error_range .close");
+                    close_btn.click(function () {
+                        $("#confirm_error_range").modal('hide');
+
+                    });
+                    confirm_btn.click(function () {
+                        $("#confirm_error_range").modal('hide');
+                        window.location = "{{ url_for('main.admin_confirmed_surveyed_data') }}";
+
+                    });
+                    var demiss_btn = $("#confirm_error_range .btn-default");
+                    demiss_btn.click(function () {
+                        $("#confirm_error_range").modal('hide');
+
+                    });
+
+
+                }
+                else{
+                    window.location = "{{ url_for('main.admin_confirmed_surveyed_data') }}";
+                }
+
+
+            });
+
+        });
+
+    </script>
+{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+        </li>
+        <li>
+            <a href="{{ url_for('main.admin_surveyed_data_list',user_id=current_user.user_id,selected_id=1) }}">
+                回测数据列表</a>
+        </li>
+        <li>
+            <strong>{{ surveyed_data.surveyed_data_number }}</strong>
+        </li>
+    </ol>
+{% endblock %}
+{% block mainContent %}
+    <div class="ibox ibox-title">回测数据：{{ surveyed_data.surveyed_data_number }}</div>
+    <div class="ibox ibox-content">
+        <div id="table_toolbar" class="btn-group" role="group">
+            <label>
+                {# <a id="table_btn_new" class='btn btn-primary' href="{{ url_for('main.admin_confirmed_surveyed_data') }}">
+            <i class="glyphicon glyphicon-plus"></i>确认导入
+        </a>#}
+                <button id="table_btn_new" class='btn btn-primary'>
+                    <i class="glyphicon glyphicon-plus"></i>确认导入
+                </button>
+                <a id="table_btn_del" class='btn btn-default'
+                   href="{{ url_for('main.admin_cancel_upload_surveyeddata',filename = surveyed_data.filename) }}"><i
+                        class="glyphicon glyphicon-trash"></i>删除该回测数据</a>
+            </label>
+        </div>
+        <div class="ibox ibox-title">
+            {#    <div class="panel panel-body gray-bg">#}
+            <div class="col-lg-2"><input id="simplyFlag" type="checkbox"> <label>简化架构</label></div>
+        <div class="col-lg-2"><input id="showorderData" type="checkbox"> <label>显示理想值</label></div>
+            <div class="col-lg-5">回测数据编号：{{ surveyed_data.surveyed_data_number }}</div>
+            {#        <div class="col-lg-3">所属项目:{{ surveyed_data.project.project_name }}</div>#}
+            <div class="col-lg-3">截至日期： {{ surveyed_data.surveyed_data_time }}</div>
+        </div>
+
+
+    <div id="simply" style="display: none">
+    <table  width="85%" id="dataTable" class="table table-bordered table-striped"  cellspacing="0">
+        {% if is_first==false %}
+        <thead>
+        <tr>
+            <th colspan="6" class="text-center">Match-cast</th>
+        </tr>
+        <tr>
+            <th colspan="2" class="text-center th-downgrade">GP-R Begin</th>
+            <th colspan="2" class="text-center th-downgrade">GP-C Begin</th>
+            <th colspan="2" class="text-center th-downgrade">GP-L Begin</th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_C_offset_begin_match }}<span class="order" style=" display: none;color:#ff0000; ">({{  '%.4f'%(order.GP_C_offset_begin_match)}})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+        </tr>
+        <tr>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_R_elevation_begin_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_elevation_begin_match )}})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_L_elevation_begin_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_elevation_begin_match )}})</span></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="tab-number"></td>
+            <td></td>
+            <td class="tab-number"></td>
+            <td></td>
+            <td class="tab-number"></td>
+        </tr>
+        </tbody>
+        <tbody>
+        <tr>
+            <th colspan="2" class="text-center th-downgrade">GP-R End</th>
+            <th colspan="2" class="text-center th-downgrade">GP-C End</th>
+            <th colspan="2" class="text-center th-downgrade">GP-L End</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_C_offset_end_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_offset_end_match) }})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+        </tr>
+        <tr>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_R_elevation_end_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_elevation_end_match )}})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_L_elevation_end_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_elevation_end_match) }})</span></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_C_length_end_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_length_end_match )}})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+        </tr>
+        <tr>
+        <td colspan="6">&nbsp;</td>
+        </tr>
+    </tbody>
+    {% else %}
+        <thead>
+        <tr>
+            <th colspan="6" class="text-center">floating bulkhead</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th colspan="2" class="text-center th-downgrade">GP-R </th>
+            <th colspan="2" class="text-center th-downgrade">GP-C </th>
+            <th colspan="2" class="text-center th-downgrade">GP-L </th>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.float_bulkhead_GP_C_offset }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_C_offset )}})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+        </tr>
+        <tr>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.float_bulkhead_GP_R_elevation }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_R_elevation) }})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.float_bulkhead_GP_L_elevation }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_L_elevation) }})</span></td>
+        </tr>
+        <tr>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.float_bulkhead_GP_R_length }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_R_length )}})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.float_bulkhead_GP_L_length }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_L_length )}})</span></td>
+        </tr>
+        <tr>
+        <td colspan="6">&nbsp;</td>
+        </tr>
+        </tbody>
+    {% endif %}
+        <thead>
+        <tr>
+            <th colspan="6" class="text-center">Wet-cast</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th colspan="2" class="text-center th-downgrade">GP-R Begin</th>
+            <th colspan="2" class="text-center th-downgrade">GP-C Begin</th>
+            <th colspan="2" class="text-center th-downgrade">GP-L Begin</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_C_offset_begin }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_offset_begin )}})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+        </tr>
+        <tr>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_R_elevation_begin }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_elevation_begin )}})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_L_elevation_begin }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_elevation_begin )}})</span></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="tab-number"></td>
+            <td></td>
+            <td class="tab-number"></td>
+            <td></td>
+            <td class="tab-number"></td>
+        </tr>
+    </tbody>
+        <tbody>
+        <tr>
+            <th colspan="2" class="text-center th-downgrade">GP-R End</th>
+            <th colspan="2" class="text-center th-downgrade">GP-C End</th>
+            <th colspan="2" class="text-center th-downgrade">GP-L End</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_C_offset_end }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_offset_end )}})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+        </tr>
+        <tr>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_R_elevation_end }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_elevation_end )}})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_L_elevation_end }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_elevation_end )}})</span></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="tab-number"></td>
+            <td></td>
+            <td class="tab-number"></td>
+            <td></td>
+            <td class="tab-number"></td>
+        </tr>
+        <tr>
+            <td colspan="6">&nbsp;</td>
+        </tr>
+    </tbody>
+        <thead>
+        <tr>
+            <th colspan="6" class="text-center">Fixed bulkhead</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th colspan="2" class="text-center th-downgrade">GP-R</th>
+            <th colspan="2" class="text-center th-downgrade">GP-C</th>
+            <th colspan="2" class="text-center th-downgrade">GP-L</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.bulkhead_GP_C_offset }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.bulkhead_GP_C_offset) }})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+        </tr>
+        <tr>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.bulkhead_GP_R_elevation }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.bulkhead_GP_R_elevation) }})</span></td>
+            <td></td>
+            <td class="tab-number"></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.bulkhead_GP_L_elevation }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.bulkhead_GP_L_elevation) }})</span></td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+    <div id="complete" style="display: block">
+    <table  width="85%" id="dataTable" class="table table-bordered table-striped"  cellspacing="0">
+        {% if is_first==false %}
+        <thead>
+        <tr>
+            <th colspan="6" class="text-center">Match-cast</th>
+        </tr>
+        <tr>
+            <th colspan="2" class="text-center th-downgrade">GP-R Begin</th>
+            <th colspan="2" class="text-center th-downgrade">GP-C Begin</th>
+            <th colspan="2" class="text-center th-downgrade">GP-L Begin</th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_R_offset_begin_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_offset_begin_match) }})</span></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_C_offset_begin_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_offset_begin_match )}})</span></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_L_offset_begin_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_offset_begin_match) }})</span></td>
+        </tr>
+        <tr>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_R_elevation_begin_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_elevation_begin_match )}})</span></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_C_elevation_begin_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_elevation_begin_match )}})</span></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_L_elevation_begin_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_elevation_begin_match) }})</span></td>
+        </tr>
+        <tr>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_R_length_begin_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_length_begin_match) }})</span></td>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_C_length_begin_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_length_begin_match )}})</span></td>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_L_length_begin_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_length_begin_match) }})</span></td>
+        </tr>
+        </tbody>
+        <tbody>
+        <tr>
+            <th colspan="2" class="text-center th-downgrade">GP-R End</th>
+            <th colspan="2" class="text-center th-downgrade">GP-C End</th>
+            <th colspan="2" class="text-center th-downgrade">GP-L End</th>
+        </tr>
+        <tr>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_R_offset_end_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_offset_end_match )}})</span></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_C_offset_end_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_offset_end_match )}})</span></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_L_offset_end_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_offset_end_match )}})</span></td>
+        </tr>
+        <tr>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_R_elevation_end_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_elevation_end_match )}})</span></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_C_elevation_end_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_elevation_end_match )}})</span></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_L_elevation_end_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_elevation_end_match) }})</span></td>
+        </tr>
+        <tr>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_R_length_end_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_length_end_match )}})</span></td>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_C_length_end_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_length_end_match )}})</span></td>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_L_length_end_match }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_length_end_match) }})</span></td>
+        </tr>
+        <tr>
+        <td colspan="6">&nbsp;</td>
+        </tr>
+    </tbody>
+    {% else %}
+        <thead>
+        <tr>
+            <th colspan="6" class="text-center">floating bulkhead</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th colspan="2" class="text-center th-downgrade">GP-R </th>
+            <th colspan="2" class="text-center th-downgrade">GP-C </th>
+            <th colspan="2" class="text-center th-downgrade">GP-L </th>
+        </tr>
+        <tr>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.float_bulkhead_GP_R_offset }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_R_offset) }})</span></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.float_bulkhead_GP_C_offset }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_C_offset) }})</span></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.float_bulkhead_GP_L_offset }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_L_offset )}})</span></td>
+        </tr>
+        <tr>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.float_bulkhead_GP_R_elevation }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_R_elevation) }})</span></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.float_bulkhead_GP_C_elevation }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_C_elevation) }})</span></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.float_bulkhead_GP_L_elevation }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_L_elevation) }})</span></td>
+        </tr>
+        <tr>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.float_bulkhead_GP_R_length }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_R_length) }})</span></td>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.float_bulkhead_GP_C_length }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_C_length )}})</span></td>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.float_bulkhead_GP_L_length }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.float_bulkhead_GP_L_length) }})</span></td>
+        </tr>
+        <tr>
+        <td colspan="6">&nbsp;</td>
+        </tr>
+        </tbody>
+    {% endif %}
+        <thead>
+        <tr>
+            <th colspan="6" class="text-center">Wet-cast</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th colspan="2" class="text-center th-downgrade">GP-R Begin</th>
+            <th colspan="2" class="text-center th-downgrade">GP-C Begin</th>
+            <th colspan="2" class="text-center th-downgrade">GP-L Begin</th>
+        </tr>
+        <tr>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_R_offset_begin }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_offset_begin )}})</span></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f' % surveyed_data.GP_C_offset_begin }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_offset_begin )}})</span></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_L_offset_begin }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_offset_begin )}})</span></td>
+        </tr>
+        <tr>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_R_elevation_begin }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_elevation_begin) }})</span></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_C_elevation_begin }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_elevation_begin )}})</span></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_L_elevation_begin }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_elevation_begin )}})</span></td>
+        </tr>
+        <tr>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_R_length_begin }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_length_begin )}})</span></td>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_C_length_begin }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_length_begin )}})</span></td>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_L_length_begin }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_length_begin )}})</span></td>
+        </tr>
+    </tbody>
+        <tbody>
+        <tr>
+            <th colspan="2" class="text-center th-downgrade">GP-R End</th>
+            <th colspan="2" class="text-center th-downgrade">GP-C End</th>
+            <th colspan="2" class="text-center th-downgrade">GP-L End</th>
+        </tr>
+        <tr>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_R_offset_end }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_offset_end )}})</span></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_C_offset_end }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_offset_end )}})</span></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_L_offset_end }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_offset_end )}})</span></td>
+        </tr>
+        <tr>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_R_elevation_end }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_elevation_end )}})</span></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_C_elevation_end }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_elevation_end )}})</span></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_L_elevation_end }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_elevation_end )}})</span></td>
+        </tr>
+        <tr>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_R_length_end }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_R_length_end )}})</span></td>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_C_length_end }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_C_length_end )}})</span></td>
+            <td>Length:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.GP_L_length_end }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.GP_L_length_end )}})</span></td>
+        </tr>
+        <tr>
+            <td colspan="6">&nbsp;</td>
+        </tr>
+    </tbody>
+        <thead>
+        <tr>
+            <th colspan="6" class="text-center">Fixed bulkhead</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th colspan="2" class="text-center th-downgrade">GP-R</th>
+            <th colspan="2" class="text-center th-downgrade">GP-C</th>
+            <th colspan="2" class="text-center th-downgrade">GP-L</th>
+        </tr>
+        <tr>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.bulkhead_GP_R_offset }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.bulkhead_GP_R_offset )}})</span></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.bulkhead_GP_C_offset }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.bulkhead_GP_C_offset )}})</span></td>
+            <td>Offset:</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.bulkhead_GP_L_offset }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.bulkhead_GP_L_offset )}})</span></td>
+        </tr>
+        <tr>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.bulkhead_GP_R_elevation }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.bulkhead_GP_R_elevation )}})</span></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.bulkhead_GP_C_elevation }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.bulkhead_GP_C_elevation )}})</span></td>
+            <td>Elevation</td>
+            <td class="tab-number">{{ '%.4f'%surveyed_data.bulkhead_GP_L_elevation }}<span class="order" style=" display: none;color:#ff0000; ">({{ '%.4f'%(order.bulkhead_GP_L_elevation)}})</span></td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+
+        {#<table width="85%" id="dataTable" class="table table-bordered table-striped" cellspacing="0">
+            {% if is_first==false %}
+                <thead>
+                <tr>
+                    <th colspan="6" class="text-center">Match-cast
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th colspan="2" class="text-center th-downgrade">GP-R Begin</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-C Begin</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-L Begin</th>
+                </tr>
+                <tr>
+                    <td>Offset:</td>
+                    <td>{{ '%.4f' % surveyed_data.GP_R_offset_begin_match }}</td>
+                    <td>Offset:</td>
+                    <td>{{ '%.4f' % surveyed_data.GP_C_offset_begin_match }}</td>
+                    <td>Offset:</td>
+                    <td>{{ '%.4f' % surveyed_data.GP_L_offset_begin_match }}</td>
+                </tr>
+                <tr>
+                    <td>Elevation</td>
+                    <td>{{ '%.4f' % surveyed_data.GP_R_elevation_begin_match }}</td>
+                    <td>Elevation</td>
+                    <td>{{ '%.4f' % surveyed_data.GP_C_elevation_begin_match }}</td>
+                    <td>Elevation</td>
+                    <td>{{ '%.4f' % surveyed_data.GP_L_elevation_begin_match }}</td>
+                </tr>
+                <tr>
+                    <td>Length:</td>
+                    <td>{{ '%.4f' % surveyed_data.GP_R_length_begin_match }}</td>
+                    <td>Length:</td>
+                    <td>{{ '%.4f' % surveyed_data.GP_C_length_begin_match }}</td>
+                    <td>Length:</td>
+                    <td>{{ '%.4f' % surveyed_data.GP_L_length_begin_match }}</td>
+                </tr>
+                </tbody>
+                <tbody>
+                <tr>
+                    <th colspan="2" class="text-center th-downgrade">GP-R End</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-C End</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-L End</th>
+                </tr>
+                <tr>
+                    <td>Offset:</td>
+                    <td>{{ '%.4f'%surveyed_data.GP_R_offset_end_match }}</td>
+                    <td>Offset:</td>
+                    <td>{{ '%.4f'%surveyed_data.GP_C_offset_end_match }}</td>
+                    <td>Offset:</td>
+                    <td>{{ '%.4f'%surveyed_data.GP_L_offset_end_match }}</td>
+                </tr>
+                <tr>
+                    <td>Elevation</td>
+                    <td>{{ '%.4f'%surveyed_data.GP_R_elevation_end_match }}</td>
+                    <td>Elevation</td>
+                    <td>{{ '%.4f'%surveyed_data.GP_C_elevation_end_match }}</td>
+                    <td>Elevation</td>
+                    <td>{{ '%.4f'%surveyed_data.GP_L_elevation_end_match }}</td>
+                </tr>
+                <tr>
+                    <td>Length:</td>
+                    <td>{{ '%.4f'%surveyed_data.GP_R_length_end_match }}</td>
+                    <td>Length:</td>
+                    <td>{{ '%.4f'%surveyed_data.GP_C_length_end_match }}</td>
+                    <td>Length:</td>
+                    <td>{{ '%.4f'%surveyed_data.GP_L_length_end_match }}</td>
+                </tr>
+                <tr>
+                    <td colspan="6">&nbsp;</td>
+                </tr>
+                </tbody>
+            {% else %}
+                <thead>
+                <tr>
+                    <th colspan="6" class="text-center">floating bulkhead
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th colspan="2" class="text-center th-downgrade">GP-R</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-C</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-L</th>
+                </tr>
+                <tr>
+                    <td>Offset:</td>
+                    <td>{{ '%.4f' % surveyed_data.float_bulkhead_GP_R_offset }}</td>
+                    <td>Offset:</td>
+                    <td>{{ '%.4f' % surveyed_data.float_bulkhead_GP_C_offset }}</td>
+                    <td>Offset:</td>
+                    <td>{{ '%.4f' % surveyed_data.float_bulkhead_GP_L_offset }}</td>
+                </tr>
+                <tr>
+                    <td>Elevation</td>
+                    <td>{{ '%.4f' % surveyed_data.float_bulkhead_GP_R_elevation }}</td>
+                    <td>Elevation</td>
+                    <td>{{ '%.4f' % surveyed_data.float_bulkhead_GP_C_elevation }}</td>
+                    <td>Elevation</td>
+                    <td>{{ '%.4f' % surveyed_data.float_bulkhead_GP_L_elevation }}</td>
+                </tr>
+                <tr>
+                    <td>Length:</td>
+                    <td>{{ '%.4f'%surveyed_data.float_bulkhead_GP_R_length }}</td>
+                    <td>Length:</td>
+                    <td>{{ '%.4f'%surveyed_data.float_bulkhead_GP_C_length }}</td>
+                    <td>Length:</td>
+                    <td>{{ '%.4f'%surveyed_data.float_bulkhead_GP_L_length }}</td>
+                </tr>
+                <tr>
+                    <td colspan="6">&nbsp;</td>
+                </tr>
+                </tbody>
+            {% endif %}
+            <tr>
+                <td colspan="6">&nbsp;</td>
+            </tr>
+            <thead>
+            <tr>
+                <th colspan="6" class="text-center">Wet-cast
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th colspan="2" class="text-center th-downgrade">GP-R Begin</th>
+                <th colspan="2" class="text-center th-downgrade">GP-C Begin</th>
+                <th colspan="2" class="text-center th-downgrade">GP-L Begin</th>
+            </tr>
+            <tr>
+                <td>Offset:</td>
+                <td>{{ '%.4f' % surveyed_data.GP_R_offset_begin }}</td>
+                <td>Offset:</td>
+                <td>{{ '%.4f' % surveyed_data.GP_C_offset_begin }}</td>
+                <td>Offset:</td>
+                <td>{{ '%.4f'%surveyed_data.GP_L_offset_begin }}</td>
+            </tr>
+            <tr>
+                <td>Elevation</td>
+                <td>{{ '%.4f'%surveyed_data.GP_R_elevation_begin }}</td>
+                <td>Elevation</td>
+                <td>{{ '%.4f'%surveyed_data.GP_C_elevation_begin }}</td>
+                <td>Elevation</td>
+                <td>{{ '%.4f'%surveyed_data.GP_L_elevation_begin }}</td>
+            </tr>
+            <tr>
+                <td>Length:</td>
+                <td>{{ '%.4f'%surveyed_data.GP_R_length_begin }}</td>
+                <td>Length:</td>
+                <td>{{ '%.4f'%surveyed_data.GP_C_length_begin }}</td>
+                <td>Length:</td>
+                <td>{{ '%.4f'%surveyed_data.GP_L_length_begin }}</td>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr>
+                <th colspan="2" class="text-center th-downgrade">GP-R End</th>
+                <th colspan="2" class="text-center th-downgrade">GP-C End</th>
+                <th colspan="2" class="text-center th-downgrade">GP-L End</th>
+            </tr>
+            <tr>
+                <td>Offset:</td>
+                <td>{{ '%.4f'%surveyed_data.GP_R_offset_end }}</td>
+                <td>Offset:</td>
+                <td>{{ '%.4f'%surveyed_data.GP_C_offset_end }}</td>
+                <td>Offset:</td>
+                <td>{{ '%.4f'%surveyed_data.GP_L_offset_end }}</td>
+            </tr>
+            <tr>
+                <td>Elevation</td>
+                <td>{{ '%.4f'%surveyed_data.GP_R_elevation_end }}</td>
+                <td>Elevation</td>
+                <td>{{ '%.4f'%surveyed_data.GP_C_elevation_end }}</td>
+                <td>Elevation</td>
+                <td>{{ '%.4f'%surveyed_data.GP_L_elevation_end }}</td>
+            </tr>
+            <tr>
+                <td>Length:</td>
+                <td>{{ '%.4f'%surveyed_data.GP_R_length_end }}</td>
+                <td>Length:</td>
+                <td>{{ '%.4f'%surveyed_data.GP_C_length_end }}</td>
+                <td>Length:</td>
+                <td>{{ '%.4f'%surveyed_data.GP_L_length_end }}</td>
+            </tr>
+            <tr>
+                <td colspan="6">&nbsp;</td>
+            </tr>
+            </tbody>
+            <thead>
+            <tr>
+                <th colspan="6" class="text-center">Fixed bulkhead
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th colspan="2" class="text-center th-downgrade">GP-R</th>
+                <th colspan="2" class="text-center th-downgrade">GP-C</th>
+                <th colspan="2" class="text-center th-downgrade">GP-L</th>
+            </tr>
+            <tr>
+                <td>Offset:</td>
+                <td>{{ '%.4f'%surveyed_data.bulkhead_GP_R_offset }}</td>
+                <td>Offset:</td>
+                <td>{{ '%.4f'%surveyed_data.bulkhead_GP_C_offset }}</td>
+                <td>Offset:</td>
+                <td>{{ '%.4f'%surveyed_data.bulkhead_GP_L_offset }}</td>
+            </tr>
+            <tr>
+                <td>Elevation</td>
+                <td>{{ '%.4f'%surveyed_data.bulkhead_GP_R_elevation }}</td>
+                <td>Elevation</td>
+                <td>{{ '%.4f'%surveyed_data.bulkhead_GP_C_elevation }}</td>
+                <td>Elevation</td>
+                <td>{{ '%.4f'%surveyed_data.bulkhead_GP_L_elevation }}</td>
+            </tr>
+            </tbody>
+        </table>#}
+        {#    </div>#}
+    </div>
+{% endblock %}
+{% block otherContents %}
+    {{ confirm_dialog("confirm_error_range","确认上传","回测数据误差超过你设定的值，你确定要上传吗？") }}
+
+{% endblock %}

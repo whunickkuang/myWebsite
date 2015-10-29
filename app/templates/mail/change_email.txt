@@ -1,0 +1,4 @@
+Dear {{ user.user_name }}:
+I'm Groot!23333!
+Just click following link to change your email,<br>
+{{ url_for('main.email_change_confirm',token=token,_external=True)}}

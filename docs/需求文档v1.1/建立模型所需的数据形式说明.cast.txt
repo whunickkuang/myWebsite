@@ -1,0 +1,376 @@
+打#号的为必备的数据：
+其它的为可根据计算导出的数据
+
+RMTOOLS    08.11.18.01
+RMCAST     1
+PROJECT    Unknown
+BRIDGE     Unknown
+DATE       14 11 2014
+LSTCHNG    14 11 2014
+######
+UNIT                   MG No description available
+
+UNCELL              CELL1           0.25              0
+
+UNRIVET              GP-C             co
+UNRIVET              GP-R             el
+UNRIVET              GP-L             el
+UNRIVET              GP-D              b
+###########节点中预拱度表中的数据：
+NODECAMB              101             -0         3e-005             -0               -0               -0         -0.00045
+NODECAMB              102   -0.001775971    0.006948798             -0               -0               -0  -0.004001941748
+NODECAMB              103   -0.003198058    0.023436415             -0               -0               -0  -0.006846116505
+NODECAMB              104   -0.004305583     0.04748751             -0               -0               -0  -0.009061165049
+NODECAMB              105   -0.005137864    0.077332667             -0               -0               -0  -0.010725728155
+NODECAMB              106   -0.005734223    0.111438389             -0               -0               -0  -0.011918446602
+NODECAMB              107   -0.006133981    0.148507105             -0               -0               -0  -0.012717961165
+NODECAMB              108   -0.006376456    0.187477163             -0               -0               -0  -0.013202912621
+NODECAMB              109   -0.006500971    0.227522835             -0               -0               -0  -0.013451941748
+NODECAMB              110   -0.006546845    0.268054316             -0               -0               -0   -0.01354368932
+NODECAMB              111   -0.006553398    0.308717723             -0               -0               -0  -0.013556796117
+###############节点数据：
+NODE	101	0	0	0
+NODE	102	3	0	0
+NODE	103	6	0	0
+NODE	104	9	0	0
+NODE	105	12	0	0
+NODE	106	15	0	0
+NODE	107	18	0	0
+NODE	108	21	0	0
+NODE	109	24	0	0
+NODE	110	27	0	0
+NODE	111	30	0	0
+
+预拱后节点数据：
+NODEERE               101              0         3e-005              0
+NODEERE               102     2.99822403    0.006948798              0
+NODEERE               103     5.99680194    0.023436415              0
+NODEERE               104     8.99569442     0.04748751              0
+NODEERE               105     11.9948621    0.077332667              0
+NODEERE               106     14.9942658    0.111438389              0
+NODEERE               107      17.993866    0.148507105              0
+NODEERE               108     20.9936235    0.187477163              0
+NODEERE               109      23.993499    0.227522835              0
+NODEERE               110     26.9934532    0.268054316              0
+NODEERE               111     29.9934466    0.308717723              0
+########节段对应节点：
+SEGNODE               101（节段）            101 起始节点           102结束节点
+SEGNODE               102            102            103
+SEGNODE               103            103            104
+SEGNODE               104            104            105
+SEGNODE               105            105            106
+SEGNODE               106            106            107
+SEGNODE               107            107            108
+SEGNODE               108            108            109
+SEGNODE               109            109            110
+SEGNODE               110            110            111
+
+SEGPLANE              101              1              0              0              1              0              0
+SEGPLANE              102              1              0              0              1              0              0
+SEGPLANE              103              1              0              0              1              0              0
+SEGPLANE              104              1              0              0              1              0              0
+SEGPLANE              105              1              0              0              1              0              0
+SEGPLANE              106              1              0              0              1              0              0
+SEGPLANE              107              1              0              0              1              0              0
+SEGPLANE              108              1              0              0              1              0              0
+SEGPLANE              109              1              0              0              1              0              0
+SEGPLANE              110              1              0              0              1              0              0
+##############节段横断面
+SEGCROSS              101            SEC              0              0              0          ATBEG
+SEGCROSS              101            SEC              0              0              0          ATEND
+SEGCROSS              102            SEC              0              0              0          ATBEG
+SEGCROSS              102            SEC              0              0              0          ATEND
+SEGCROSS              103            SEC              0              0              0          ATBEG
+SEGCROSS              103            SEC              0              0              0          ATEND
+SEGCROSS              104            SEC              0              0              0          ATBEG
+SEGCROSS              104            SEC              0              0              0          ATEND
+SEGCROSS              105            SEC              0              0              0          ATBEG
+SEGCROSS              105            SEC              0              0              0          ATEND
+SEGCROSS              106            SEC              0              0              0          ATBEG
+SEGCROSS              106            SEC              0              0              0          ATEND
+SEGCROSS              107            SEC              0              0              0          ATBEG
+SEGCROSS              107            SEC              0              0              0          ATEND
+SEGCROSS              108            SEC              0              0              0          ATBEG
+SEGCROSS              108            SEC              0              0              0          ATEND
+SEGCROSS              109            SEC              0              0              0          ATBEG
+SEGCROSS              109            SEC              0              0              0          ATEND
+SEGCROSS              110            SEC              0              0              0          ATBEG
+SEGCROSS              110            SEC              0              0              0          ATEND
+############匹配过程：
+SEGMATCH              101           NONE          ATBEG
+SEGMATCH              102            101          ATBEG
+SEGMATCH              103            102          ATBEG
+SEGMATCH              104            103          ATBEG
+SEGMATCH              105            104          ATBEG
+SEGMATCH              106            105          ATBEG
+SEGMATCH              107            106          ATBEG
+SEGMATCH              108            107          ATBEG
+SEGMATCH              109            108          ATBEG
+SEGMATCH              110            109          ATBEG
+#####节点处铆钉位置：
+SEGRIVET              101           GP-C              0              0              0          ATBEG
+SEGRIVET              101           GP-C              3              0              0          ATEND
+SEGRIVET              102           GP-C              3              0              0          ATBEG
+SEGRIVET              102           GP-C              6              0              0          ATEND
+SEGRIVET              103           GP-C              6              0              0          ATBEG
+SEGRIVET              103           GP-C              9              0              0          ATEND
+SEGRIVET              104           GP-C              9              0              0          ATBEG
+SEGRIVET              104           GP-C             12              0              0          ATEND
+SEGRIVET              105           GP-C             12              0              0          ATBEG
+SEGRIVET              105           GP-C             15              0              0          ATEND
+SEGRIVET              106           GP-C             15              0              0          ATBEG
+SEGRIVET              106           GP-C             18              0              0          ATEND
+SEGRIVET              107           GP-C             18              0              0          ATBEG
+SEGRIVET              107           GP-C             21              0              0          ATEND
+SEGRIVET              108           GP-C             21              0              0          ATBEG
+SEGRIVET              108           GP-C             24              0              0          ATEND
+SEGRIVET              109           GP-C             24              0              0          ATBEG
+SEGRIVET              109           GP-C             27              0              0          ATEND
+SEGRIVET              110           GP-C             27              0              0          ATBEG
+SEGRIVET              110           GP-C             30              0              0          ATEND
+
+SEGRIVET              101           GP-R              0              0           -0.8          ATBEG
+SEGRIVET              101           GP-R              3              0           -0.8          ATEND
+SEGRIVET              102           GP-R              3              0           -0.8          ATBEG
+SEGRIVET              102           GP-R              6              0           -0.8          ATEND
+SEGRIVET              103           GP-R              6              0           -0.8          ATBEG
+SEGRIVET              103           GP-R              9              0           -0.8          ATEND
+SEGRIVET              104           GP-R              9              0           -0.8          ATBEG
+SEGRIVET              104           GP-R             12              0           -0.8          ATEND
+SEGRIVET              105           GP-R             12              0           -0.8          ATBEG
+SEGRIVET              105           GP-R             15              0           -0.8          ATEND
+SEGRIVET              106           GP-R             15              0           -0.8          ATBEG
+SEGRIVET              106           GP-R             18              0           -0.8          ATEND
+SEGRIVET              107           GP-R             18              0           -0.8          ATBEG
+SEGRIVET              107           GP-R             21              0           -0.8          ATEND
+SEGRIVET              108           GP-R             21              0           -0.8          ATBEG
+SEGRIVET              108           GP-R             24              0           -0.8          ATEND
+SEGRIVET              109           GP-R             24              0           -0.8          ATBEG
+SEGRIVET              109           GP-R             27              0           -0.8          ATEND
+SEGRIVET              110           GP-R             27              0           -0.8          ATBEG
+SEGRIVET              110           GP-R             30              0           -0.8          ATEND
+
+SEGRIVET              101           GP-L              0              0            0.8          ATBEG
+SEGRIVET              101           GP-L              3              0            0.8          ATEND
+SEGRIVET              102           GP-L              3              0            0.8          ATBEG
+SEGRIVET              102           GP-L              6              0            0.8          ATEND
+SEGRIVET              103           GP-L              6              0            0.8          ATBEG
+SEGRIVET              103           GP-L              9              0            0.8          ATEND
+SEGRIVET              104           GP-L              9              0            0.8          ATBEG
+SEGRIVET              104           GP-L             12              0            0.8          ATEND
+SEGRIVET              105           GP-L             12              0            0.8          ATBEG
+SEGRIVET              105           GP-L             15              0            0.8          ATEND
+SEGRIVET              106           GP-L             15              0            0.8          ATBEG
+SEGRIVET              106           GP-L             18              0            0.8          ATEND
+SEGRIVET              107           GP-L             18              0            0.8          ATBEG
+SEGRIVET              107           GP-L             21              0            0.8          ATEND
+SEGRIVET              108           GP-L             21              0            0.8          ATBEG
+SEGRIVET              108           GP-L             24              0            0.8          ATEND
+SEGRIVET              109           GP-L             24              0            0.8          ATBEG
+SEGRIVET              109           GP-L             27              0            0.8          ATEND
+SEGRIVET              110           GP-L             27              0            0.8          ATBEG
+SEGRIVET              110           GP-L             30              0            0.8          ATEND
+
+SEGRIVET              101           GP-D              0             -1             -0          ATBEG
+SEGRIVET              101           GP-D              3             -1             -0          ATEND
+SEGRIVET              102           GP-D              3             -1             -0          ATBEG
+SEGRIVET              102           GP-D              6             -1             -0          ATEND
+SEGRIVET              103           GP-D              6             -1             -0          ATBEG
+SEGRIVET              103           GP-D              9             -1             -0          ATEND
+SEGRIVET              104           GP-D              9             -1             -0          ATBEG
+SEGRIVET              104           GP-D             12             -1             -0          ATEND
+SEGRIVET              105           GP-D             12             -1             -0          ATBEG
+SEGRIVET              105           GP-D             15             -1             -0          ATEND
+SEGRIVET              106           GP-D             15             -1             -0          ATBEG
+SEGRIVET              106           GP-D             18             -1             -0          ATEND
+SEGRIVET              107           GP-D             18             -1             -0          ATBEG
+SEGRIVET              107           GP-D             21             -1             -0          ATEND
+SEGRIVET              108           GP-D             21             -1             -0          ATBEG
+SEGRIVET              108           GP-D             24             -1             -0          ATEND
+SEGRIVET              109           GP-D             24             -1             -0          ATBEG
+SEGRIVET              109           GP-D             27             -1             -0          ATEND
+SEGRIVET              110           GP-D             27             -1             -0          ATBEG
+SEGRIVET              110           GP-D             30             -1             -0          ATEND
+节点处铆钉预拱后的坐标
+SEGRIVERE             101           GP-C              0         3e-005              0          ATBEG
+SEGRIVERE             101           GP-C     2.99822403    0.006948798              0          ATEND
+SEGRIVERE             102           GP-C     2.99822403    0.006948798              0          ATBEG
+SEGRIVERE             102           GP-C     5.99680194    0.023436415              0          ATEND
+SEGRIVERE             103           GP-C     5.99680194    0.023436415              0          ATBEG
+SEGRIVERE             103           GP-C     8.99569442     0.04748751              0          ATEND
+SEGRIVERE             104           GP-C     8.99569442     0.04748751              0          ATBEG
+SEGRIVERE             104           GP-C     11.9948621    0.077332667              0          ATEND
+SEGRIVERE             105           GP-C     11.9948621    0.077332667              0          ATBEG
+SEGRIVERE             105           GP-C     14.9942658    0.111438389              0          ATEND
+SEGRIVERE             106           GP-C     14.9942658    0.111438389              0          ATBEG
+SEGRIVERE             106           GP-C      17.993866    0.148507105              0          ATEND
+SEGRIVERE             107           GP-C      17.993866    0.148507105              0          ATBEG
+SEGRIVERE             107           GP-C     20.9936235    0.187477163              0          ATEND
+SEGRIVERE             108           GP-C     20.9936235    0.187477163              0          ATBEG
+SEGRIVERE             108           GP-C      23.993499    0.227522835              0          ATEND
+SEGRIVERE             109           GP-C      23.993499    0.227522835              0          ATBEG
+SEGRIVERE             109           GP-C     26.9934532    0.268054316              0          ATEND
+SEGRIVERE             110           GP-C     26.9934532    0.268054316              0          ATBEG
+SEGRIVERE             110           GP-C     29.9934466    0.308717723              0          ATEND
+
+SEGRIVERE             101           GP-R              0         3e-005           -0.8          ATBEG
+SEGRIVERE             101           GP-R     2.99822403    0.006948798           -0.8          ATEND
+SEGRIVERE             102           GP-R     2.99822403    0.006948798           -0.8          ATBEG
+SEGRIVERE             102           GP-R     5.99680194    0.023436415           -0.8          ATEND
+SEGRIVERE             103           GP-R     5.99680194    0.023436415           -0.8          ATBEG
+SEGRIVERE             103           GP-R     8.99569442     0.04748751           -0.8          ATEND
+SEGRIVERE             104           GP-R     8.99569442     0.04748751           -0.8          ATBEG
+SEGRIVERE             104           GP-R     11.9948621    0.077332667           -0.8          ATEND
+SEGRIVERE             105           GP-R     11.9948621    0.077332667           -0.8          ATBEG
+SEGRIVERE             105           GP-R     14.9942658    0.111438389           -0.8          ATEND
+SEGRIVERE             106           GP-R     14.9942658    0.111438389           -0.8          ATBEG
+SEGRIVERE             106           GP-R      17.993866    0.148507105           -0.8          ATEND
+SEGRIVERE             107           GP-R      17.993866    0.148507105           -0.8          ATBEG
+SEGRIVERE             107           GP-R     20.9936235    0.187477163           -0.8          ATEND
+SEGRIVERE             108           GP-R     20.9936235    0.187477163           -0.8          ATBEG
+SEGRIVERE             108           GP-R      23.993499    0.227522835           -0.8          ATEND
+SEGRIVERE             109           GP-R      23.993499    0.227522835           -0.8          ATBEG
+SEGRIVERE             109           GP-R     26.9934532    0.268054316           -0.8          ATEND
+SEGRIVERE             110           GP-R     26.9934532    0.268054316           -0.8          ATBEG
+SEGRIVERE             110           GP-R     29.9934466    0.308717723           -0.8          ATEND
+
+SEGRIVERE             101           GP-L              0         3e-005            0.8          ATBEG
+SEGRIVERE             101           GP-L     2.99822403    0.006948798            0.8          ATEND
+SEGRIVERE             102           GP-L     2.99822403    0.006948798            0.8          ATBEG
+SEGRIVERE             102           GP-L     5.99680194    0.023436415            0.8          ATEND
+SEGRIVERE             103           GP-L     5.99680194    0.023436415            0.8          ATBEG
+SEGRIVERE             103           GP-L     8.99569442     0.04748751            0.8          ATEND
+SEGRIVERE             104           GP-L     8.99569442     0.04748751            0.8          ATBEG
+SEGRIVERE             104           GP-L     11.9948621    0.077332667            0.8          ATEND
+SEGRIVERE             105           GP-L     11.9948621    0.077332667            0.8          ATBEG
+SEGRIVERE             105           GP-L     14.9942658    0.111438389            0.8          ATEND
+SEGRIVERE             106           GP-L     14.9942658    0.111438389            0.8          ATBEG
+SEGRIVERE             106           GP-L      17.993866    0.148507105            0.8          ATEND
+SEGRIVERE             107           GP-L      17.993866    0.148507105            0.8          ATBEG
+SEGRIVERE             107           GP-L     20.9936235    0.187477163            0.8          ATEND
+SEGRIVERE             108           GP-L     20.9936235    0.187477163            0.8          ATBEG
+SEGRIVERE             108           GP-L      23.993499    0.227522835            0.8          ATEND
+SEGRIVERE             109           GP-L      23.993499    0.227522835            0.8          ATBEG
+SEGRIVERE             109           GP-L     26.9934532    0.268054316            0.8          ATEND
+SEGRIVERE             110           GP-L     26.9934532    0.268054316            0.8          ATBEG
+SEGRIVERE             110           GP-L     29.9934466    0.308717723            0.8          ATEND
+
+SEGRIVERE             101           GP-D        0.00045       -0.99997             -0          ATBEG
+SEGRIVERE             101           GP-D     3.00222597   -0.993051202             -0          ATEND
+SEGRIVERE             102           GP-D     3.00222597   -0.993051202             -0          ATBEG
+SEGRIVERE             102           GP-D     6.00364806   -0.976563585             -0          ATEND
+SEGRIVERE             103           GP-D     6.00364806   -0.976563585             -0          ATBEG
+SEGRIVERE             103           GP-D     9.00475558    -0.95251249             -0          ATEND
+SEGRIVERE             104           GP-D     9.00475558    -0.95251249             -0          ATBEG
+SEGRIVERE             104           GP-D     12.0055879   -0.922667333             -0          ATEND
+SEGRIVERE             105           GP-D     12.0055879   -0.922667333             -0          ATBEG
+SEGRIVERE             105           GP-D     15.0061842   -0.888561611             -0          ATEND
+SEGRIVERE             106           GP-D     15.0061842   -0.888561611             -0          ATBEG
+SEGRIVERE             106           GP-D      18.006584   -0.851492895             -0          ATEND
+SEGRIVERE             107           GP-D      18.006584   -0.851492895             -0          ATBEG
+SEGRIVERE             107           GP-D     21.0068265   -0.812522837             -0          ATEND
+SEGRIVERE             108           GP-D     21.0068265   -0.812522837             -0          ATBEG
+SEGRIVERE             108           GP-D      24.006951   -0.772477165             -0          ATEND
+SEGRIVERE             109           GP-D      24.006951   -0.772477165             -0          ATBEG
+SEGRIVERE             109           GP-D     27.0069968   -0.731945684             -0          ATEND
+SEGRIVERE             110           GP-D     27.0069968   -0.731945684             -0          ATBEG
+SEGRIVERE             110           GP-D     30.0070034   -0.691282277             -0          ATEND
+铆钉偏置后的坐标:
+SEGRRIVERE            101           GP-C    0.249999334 0.000606906488              0          ATBEG
+SEGRRIVERE            101           GP-C     2.74822469  0.00637189151              0          ATEND
+SEGRRIVERE            102           GP-C     3.24822025  0.00832339691              0          ATBEG
+SEGRRIVERE            102           GP-C     5.74680572   0.0220618161              0          ATEND
+SEGRRIVERE            103           GP-C      6.2467939   0.0254413486              0          ATBEG
+SEGRRIVERE            103           GP-C     8.74570246   0.0454825764              0          ATEND
+SEGRRIVERE            104           GP-C     9.24568204   0.0499751734              0          ATBEG
+SEGRRIVERE            104           GP-C     11.7448745   0.0748450036              0          ATEND
+SEGRRIVERE            105           GP-C      12.244846   0.0801751918              0          ATBEG
+SEGRRIVERE            105           GP-C     14.7442819    0.108595864              0          ATEND
+SEGRRIVERE            106           GP-C     15.2442467    0.114527624              0          ATBEG
+SEGRRIVERE            106           GP-C     17.7438851     0.14541787              0          ATEND
+SEGRRIVERE            107           GP-C     18.2438449    0.151754598              0          ATBEG
+SEGRRIVERE            107           GP-C     20.7436446     0.18422967              0          ATEND
+SEGRRIVERE            108           GP-C     21.2436013    0.190814144              0          ATBEG
+SEGRRIVERE            108           GP-C     23.7435213    0.224185854              0          ATEND
+SEGRRIVERE            109           GP-C     24.2434762    0.230900202              0          ATBEG
+SEGRRIVERE            109           GP-C      26.743476    0.264676949              0          ATEND
+SEGRRIVERE            110           GP-C     27.2434302    0.271442629              0          ATBEG
+SEGRRIVERE            110           GP-C     29.7434696     0.30532941              0          ATEND
+
+SEGRRIVERE            101           GP-R    0.249999334 0.000606906488           -0.8          ATBEG
+SEGRRIVERE            101           GP-R     2.74822469  0.00637189151           -0.8          ATEND
+SEGRRIVERE            102           GP-R     3.24822025  0.00832339691           -0.8          ATBEG
+SEGRRIVERE            102           GP-R     5.74680572   0.0220618161           -0.8          ATEND
+SEGRRIVERE            103           GP-R      6.2467939   0.0254413486           -0.8          ATBEG
+SEGRRIVERE            103           GP-R     8.74570246   0.0454825764           -0.8          ATEND
+SEGRRIVERE            104           GP-R     9.24568204   0.0499751734           -0.8          ATBEG
+SEGRRIVERE            104           GP-R     11.7448745   0.0748450036           -0.8          ATEND
+SEGRRIVERE            105           GP-R      12.244846   0.0801751918           -0.8          ATBEG
+SEGRRIVERE            105           GP-R     14.7442819    0.108595864           -0.8          ATEND
+SEGRRIVERE            106           GP-R     15.2442467    0.114527624           -0.8          ATBEG
+SEGRRIVERE            106           GP-R     17.7438851     0.14541787           -0.8          ATEND
+SEGRRIVERE            107           GP-R     18.2438449    0.151754598           -0.8          ATBEG
+SEGRRIVERE            107           GP-R     20.7436446     0.18422967           -0.8          ATEND
+SEGRRIVERE            108           GP-R     21.2436013    0.190814144           -0.8          ATBEG
+SEGRRIVERE            108           GP-R     23.7435213    0.224185854           -0.8          ATEND
+SEGRRIVERE            109           GP-R     24.2434762    0.230900202           -0.8          ATBEG
+SEGRRIVERE            109           GP-R      26.743476    0.264676949           -0.8          ATEND
+SEGRRIVERE            110           GP-R     27.2434302    0.271442629           -0.8          ATBEG
+SEGRRIVERE            110           GP-R     29.7434696     0.30532941           -0.8          ATEND
+
+SEGRRIVERE            101           GP-L    0.249999334 0.000606906488            0.8          ATBEG
+SEGRRIVERE            101           GP-L     2.74822469  0.00637189151            0.8          ATEND
+SEGRRIVERE            102           GP-L     3.24822025  0.00832339691            0.8          ATBEG
+SEGRRIVERE            102           GP-L     5.74680572   0.0220618161            0.8          ATEND
+SEGRRIVERE            103           GP-L      6.2467939   0.0254413486            0.8          ATBEG
+SEGRRIVERE            103           GP-L     8.74570246   0.0454825764            0.8          ATEND
+SEGRRIVERE            104           GP-L     9.24568204   0.0499751734            0.8          ATBEG
+SEGRRIVERE            104           GP-L     11.7448745   0.0748450036            0.8          ATEND
+SEGRRIVERE            105           GP-L      12.244846   0.0801751918            0.8          ATBEG
+SEGRRIVERE            105           GP-L     14.7442819    0.108595864            0.8          ATEND
+SEGRRIVERE            106           GP-L     15.2442467    0.114527624            0.8          ATBEG
+SEGRRIVERE            106           GP-L     17.7438851     0.14541787            0.8          ATEND
+SEGRRIVERE            107           GP-L     18.2438449    0.151754598            0.8          ATBEG
+SEGRRIVERE            107           GP-L     20.7436446     0.18422967            0.8          ATEND
+SEGRRIVERE            108           GP-L     21.2436013    0.190814144            0.8          ATBEG
+SEGRRIVERE            108           GP-L     23.7435213    0.224185854            0.8          ATEND
+SEGRRIVERE            109           GP-L     24.2434762    0.230900202            0.8          ATBEG
+SEGRRIVERE            109           GP-L      26.743476    0.264676949            0.8          ATEND
+SEGRRIVERE            110           GP-L     27.2434302    0.271442629            0.8          ATBEG
+SEGRRIVERE            110           GP-L     29.7434696     0.30532941            0.8          ATEND
+
+SEGRRIVERE            101           GP-D    0.250449336   -0.999393776              0          ATBEG
+SEGRRIVERE            101           GP-D     2.75222663   -0.993627426             -0          ATEND
+SEGRRIVERE            102           GP-D      3.2522222   -0.991677906             -0          ATBEG
+SEGRRIVERE            102           GP-D     5.75365183   -0.977936881              0          ATEND
+SEGRRIVERE            103           GP-D     6.25364003   -0.974560131             -0          ATBEG
+SEGRRIVERE            103           GP-D     8.75476361   -0.954515944              0          ATEND
+SEGRRIVERE            104           GP-D     9.25474322   -0.950026206             -0          ATBEG
+SEGRRIVERE            104           GP-D     11.7556002   -0.925153617              0          ATEND
+SEGRRIVERE            105           GP-D     12.2555717   -0.919825938             -0          ATBEG
+SEGRRIVERE            105           GP-D     14.7562004   -0.891403006              0          ATEND
+SEGRRIVERE            106           GP-D     15.2561651   -0.885473199             -0          ATBEG
+SEGRRIVERE            106           GP-D     17.7566031   -0.854581307              0          ATEND
+SEGRRIVERE            107           GP-D     18.2565629   -0.848245927             -0          ATBEG
+SEGRRIVERE            107           GP-D     20.7568475   -0.815769805              0          ATEND
+SEGRRIVERE            108           GP-D     21.2568042   -0.809186133             -0          ATBEG
+SEGRRIVERE            108           GP-D     23.7569732   -0.775813869              0          ATEND
+SEGRRIVERE            109           GP-D     24.2569282   -0.769099901             -0          ATBEG
+SEGRRIVERE            109           GP-D     26.7570197   -0.735322948              0          ATEND
+SEGRRIVERE            110           GP-D     27.2569739   -0.728557385             -0          ATBEG
+SEGRRIVERE            110           GP-D     29.7570264   -0.694670576              0          ATEND
+
+SAVEUNIT               MG No description available
+
+
+
+横断面的定义：
+CROSS      SEC
+
+POINT           -1.000000         0.0000          OUTER
+LINE             1.000000         0.0000
+LINE             1.000000        -1.0000
+LINE            -1.000000        -1.0000
+
+END
+

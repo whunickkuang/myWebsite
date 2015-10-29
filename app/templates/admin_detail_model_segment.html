@@ -1,0 +1,251 @@
+{% macro render_segment(segments) %}
+            <div class="row">
+                <table id="segMatch" class="display table table-bordered table-striped table-hover table-responsive">
+                    <thead>
+                    <tr>
+                        <th>节段编号</th>
+                        <th>匹配节段</th>
+                        <th>方向</th>
+                        <th>节点1</th>
+                        <th>节点2</th>
+                        <th>状态</th>
+                        <th>日期</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>101</td>
+                        <td></td>
+                        <td>开端</td>
+                        <td>101</td>
+                        <td>102</td>
+                        <td>浇筑</td>
+                        <td>16.03.2015</td>
+
+                    </tr>
+                    <tr>
+                        <td>102</td>
+                        <td>101</td>
+                        <td>开端</td>
+                        <td>102</td>
+                        <td>103</td>
+                        <td>浇筑</td>
+                        <td>16.03.2015</td>
+                    </tr>
+                    <tr>
+                        <td>103</td>
+                        <td>102</td>
+                        <td>开端</td>
+                        <td>103</td>
+                        <td>104</td>
+                        <td>浇筑</td>
+                        <td>16.03.2015</td>
+                    </tr>
+                    <tr>
+                        <td>104</td>
+                        <td>103</td>
+                        <td>开端</td>
+                        <td>104</td>
+                        <td>105</td>
+                        <td>浇筑</td>
+                        <td>16.03.2015</td>
+                    </tr>
+                    <tr>
+                        <td>105</td>
+                        <td>104</td>
+                        <td>开端</td>
+                        <td>105</td>
+                        <td>106</td>
+                        <td>浇筑</td>
+                        <td>16.03.2015</td>
+                    </tr>
+                    <tr>
+                        <td>106</td>
+                        <td>105</td>
+                        <td>开端</td>
+                        <td>106</td>
+                        <td>107</td>
+                        <td>浇筑</td>
+                        <td>16.03.2015</td>
+                    </tr>
+                    <tr>
+                        <td>107</td>
+                        <td>106</td>
+                        <td>开端</td>
+                        <td>107</td>
+                        <td>108</td>
+                        <td>浇筑</td>
+                        <td>16.03.2015</td>
+                    </tr>
+                    <tr>
+                        <td>108</td>
+                        <td>107</td>
+                        <td>开端</td>
+                        <td>108</td>
+                        <td>109</td>
+                        <td>浇筑</td>
+                        <td>16.03.2015</td>
+                    </tr>
+                    <tr>
+                        <td>109</td>
+                        <td>108</td>
+                        <td>开端</td>
+                        <td>109</td>
+                        <td>110</td>
+                        <td>浇筑</td>
+                        <td>16.03.2015</td>
+                    </tr>
+                    <tr>
+                        <td>110</td>
+                        <td>109</td>
+                        <td>开端</td>
+                        <td>110</td>
+                        <td>11</td>
+                        <td>浇筑</td>
+                        <td>16.03.2015</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">设置</div>
+                <div class="col-sm-4 col-sm-offset-6"><input id="segmentCamber" type="checkbox">包括预拱度</div>
+            </div>
+            <div class="row">
+                <table id="segIdeal" class="display table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>节段编号</th>
+                        <th>GP-C-X-BEGIN</th>
+                        <th>GP-C-Y-BEGIN</th>
+                        <th>GP-C-Z-BEGIN</th>
+                        <th>GP-R-X-BEGIN</th>
+                        <th>GP-R-Y-BEGIN</th>
+                        <th>GP-R-Z-BEGIN</th>
+                        <th>GP-L-X-BEGIN</th>
+                        <th>GP-L-Y-BEGIN</th>
+                        <th>GP-L-Z-BEGIN</th>
+                        <th>GP-D-X-BEGIN</th>
+                        <th>GP-D-Y-BEGIN</th>
+                        <th>GP-D-Z-BEGIN</th>
+                        <th>GP-C-X-END</th>
+                        <th>GP-C-Y-END</th>
+                        <th>GP-C-Z-END</th>
+                        <th>GP-R-X-END</th>
+                        <th>GP-R-Y-END</th>
+                        <th>GP-R-Z-END</th>
+                        <th>GP-L-X-END</th>
+                        <th>GP-L-Y-END</th>
+                        <th>GP-L-Z-END</th>
+                        <th>GP-D-X-END</th>
+                        <th>GP-D-Y-END</th>
+                        <th>GP-D-Z-END</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for segment in segments %}
+                        {% set itemLoop = loop %}
+                        <tr>
+                            <td>{{ segment.segment_number }}</td>
+                            <td>{{ segment.segment_data.segment_data_B_GP_C_X }}</td>
+                            <td>{{ segment.segment_data.segment_data_B_GP_C_Y }}</td>
+                            <td>{{ segment.segment_data.segment_data_B_GP_C_Z }}</td>
+                            <td>{{ segment.segment_data.segment_data_B_GP_R_X }}</td>
+                            <td>{{ segment.segment_data.segment_data_B_GP_R_Y }}</td>
+                            <td>{{ segment.segment_data.segment_data_B_GP_R_Z }}</td>
+                            <td>{{ segment.segment_data.segment_data_B_GP_L_X }}</td>
+                            <td>{{ segment.segment_data.segment_data_B_GP_L_Y }}</td>
+                            <td>{{ segment.segment_data.segment_data_B_GP_L_Z }}</td>
+                            <td>{{ segment.segment_data.segment_data_B_GP_D_X }}</td>
+                            <td>{{ segment.segment_data.segment_data_B_GP_D_Y }}</td>
+                            <td>{{ segment.segment_data.segment_data_B_GP_D_Z }}</td>
+                            <td>{{ segment.segment_data.segment_data_E_GP_C_X }}</td>
+                            <td>{{ segment.segment_data.segment_data_E_GP_C_Y }}</td>
+                            <td>{{ segment.segment_data.segment_data_E_GP_C_Z }}</td>
+                            <td>{{ segment.segment_data.segment_data_E_GP_R_X }}</td>
+                            <td>{{ segment.segment_data.segment_data_E_GP_R_Y }}</td>
+                            <td>{{ segment.segment_data.segment_data_E_GP_R_Z }}</td>
+                            <td>{{ segment.segment_data.segment_data_E_GP_L_X }}</td>
+                            <td>{{ segment.segment_data.segment_data_E_GP_L_Y }}</td>
+                            <td>{{ segment.segment_data.segment_data_E_GP_L_Z }}</td>
+                            <td>{{ segment.segment_data.segment_data_E_GP_D_X }}</td>
+                            <td>{{ segment.segment_data.segment_data_E_GP_D_Y }}</td>
+                            <td>{{ segment.segment_data.segment_data_E_GP_D_Z }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <label id="table_btn_new" class='btn  col-sm-1  text-left'>浇筑后（测量值）：</label>
+                <label id="table_btn_new" class='btn  col-sm-1 col-sm-offset-4'></label>
+            </div>
+            <div class="row">
+                <table id="segActual" class="display table table-bordered table-striped table-hover" cellspacing="0"
+                       width="100%">
+                    <thead>
+                    <tr>
+                        <th>节段编号</th>
+                        <th>GP-C-X-BEGIN</th>
+                        <th>GP-C-Y-BEGIN</th>
+                        <th>GP-C-Z-BEGIN</th>
+                        <th>GP-R-X-BEGIN</th>
+                        <th>GP-R-Y-BEGIN</th>
+                        <th>GP-R-Z-BEGIN</th>
+                        <th>GP-L-X-BEGIN</th>
+                        <th>GP-L-Y-BEGIN</th>
+                        <th>GP-L-Z-BEGIN</th>
+                        <th>GP-D-X-BEGIN</th>
+                        <th>GP-D-Y-BEGIN</th>
+                        <th>GP-D-Z-BEGIN</th>
+                        <th>GP-C-X-END</th>
+                        <th>GP-C-Y-END</th>
+                        <th>GP-C-Z-END</th>
+                        <th>GP-R-X-END</th>
+                        <th>GP-R-Y-END</th>
+                        <th>GP-R-Z-END</th>
+                        <th>GP-L-X-END</th>
+                        <th>GP-L-Y-END</th>
+                        <th>GP-L-Z-END</th>
+                        <th>GP-D-X-END</th>
+                        <th>GP-D-Y-END</th>
+                        <th>GP-D-Z-END</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for segment in segments %}
+                        {% set itemLoop = loop %}
+
+                        <tr>
+                            <td>{{ segment.segment_number }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_B_GP_C_X }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_B_GP_C_Y }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_B_GP_C_Z }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_B_GP_R_X }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_B_GP_R_Y }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_B_GP_R_Z }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_B_GP_L_X }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_B_GP_L_Y }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_B_GP_L_Z }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_B_GP_D_X }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_B_GP_D_Y }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_B_GP_D_Z }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_E_GP_C_X }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_E_GP_C_Y }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_E_GP_C_Z }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_E_GP_R_X }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_E_GP_R_Y }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_E_GP_R_Z }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_E_GP_L_X }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_E_GP_L_Y }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_E_GP_L_Z }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_E_GP_D_X }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_E_GP_D_Y }}</td>
+                            <td>{{ segment.segment_data.seg_act_data_E_GP_D_Z }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+{% endmacro %}

@@ -1,0 +1,219 @@
+{% extends "admin_list_base.html" %}
+{% from "html_utils.html" import table_select %}
+{% from "html_utils.html" import confirm_dialog%}
+{% set activeMenu = "menu_surveyed_data_list" %}
+{% block mainTitle %}回测数据管理{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+        <li class="active">
+            <strong>回测数据列表</strong>
+        </li>
+    </ol>
+{% endblock %}
+{% block otherjs %}
+    <script src="{{ url_for('static',filename="libs/themes/inspinia/js/ajaxfileupload.js") }}"></script>
+    <script type="text/javascript">
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        $(function(){
+            $(".verify-btn").each(function(){
+                $(this).click(function(){
+                    id = $(this).attr('id');
+                    if($(this).text() == "待审核"){
+                        $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_check_survey_data_out') }}', {}, function (data) {
+                var result = data.checkOut;
+                if (result['outRange'] == 1) {
+                    $("#confirm_error_range").modal('show');
+                    var confirm_btn = $("#confirm_error_range .btn-primary");
+                    var close_btn = $("#confirm_error_range .close");
+                    close_btn.click(function () {
+                        $("#confirm_error_range").modal('hide');
+
+                    });
+                    confirm_btn.click(function () {
+                        $("#confirm_error_range").modal('hide');
+                         $.getJSON($SCRIPT_ROOT +'{{ url_for('main.admin_surveyed_data_verifying') }}',{
+                                    surveyed_data_id : id
+                                },
+                                function(data){
+                                    selected_id=data.model;
+                                    window.location ='/admin/surveyed/data/model/'+{{ session['user_id'] }}+'&'+selected_id;
+                                });
+
+
+                    });
+                    var demiss_btn = $("#confirm_error_range .btn-default");
+                    demiss_btn.click(function () {
+                        $("#confirm_error_range").modal('hide');
+
+                    });
+
+
+                }
+                            else{
+                    $.getJSON($SCRIPT_ROOT +'{{ url_for('main.admin_surveyed_data_verifying') }}',{
+                                    surveyed_data_id : id
+                                },
+                                function(data){
+                                    selected_id=data.model;
+                                    window.location ='/admin/surveyed/data/model/'+{{ session['user_id'] }}+'&'+selected_id;
+                                });
+
+                }
+
+
+            });
+
+                }
+                })
+            })
+        })
+    </script>
+    <script type=text/javascript>
+        function ajaxFileUpload() {
+            selected_model_id = $("#select-model").children("option:selected").val();
+
+            $.ajaxFileUpload
+            (
+                    {
+                        url: '{{ url_for('main.upload_surveyed_data') }}', //用于文件上传的服务器端请求地址
+                        secureuri: false, //一般设置为false
+                        fileElementId: 'touxiang', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                        dataType: 'text', //返回值类型 一般设置为json
+                        data:{
+                            "model_id":selected_model_id
+                        },
+                        success: function (data, status){//服务器成功响应处理函数
+{#                            window.location = "{{ url_for('main.admin_confirmed_surveyed_data") }}";#}
+                            if(data=='stop'){
+                                alert("无法为空模型导入回测数据");
+                            }
+                            else if(data=='finish'){
+                                alert("项目已结束，无法再导入回测数据");
+                                window.location.reload();
+                            }
+                            else if(data=="ERROR"){
+                                window.location.reload();
+                            }
+                            else{
+                                window.location ="{{ url_for('main.admin_confirm_surveyed_data_display') }}";
+                            }
+
+                        },
+                        error: function (data, status, e)//服务器响应失败处理函数
+                        {
+                            alert('error');
+                            alert(e);
+                        }
+                    }
+            );
+            return false;
+        }
+    </script>
+    <script>
+        $(function(){
+            $("#select-model").change(function(){
+                user_id = {{ session['user_id'] }};
+                selected_id=$(this).children("option:selected").val();
+                window.location = '/admin/surveyed/data/model/'+user_id+'&'+selected_id;
+            })
+            if( $("#select-model").children("option").length == 0){
+                $("#up").attr("disabled","true");
+            }
+        })
+    </script>
+{% endblock %}
+{% block mainContent %}
+    <div class="ibox ibox-title">
+        <span >回测数据列表</span>
+{#    <span  class="col col-sm-10" style="text-align: right">#}
+{#    选择模型：#}
+{#        <select id="select-model" style="width: 130px;" autocomplete="off">#}
+{#            {% for item in models %}#}
+{#                {% if item.model_id == model_id %}#}
+{#                    <option value="{{ item.model_id }}" selected='selected'>{{ item.model_name }}</option>#}
+{#                {% else %}#}
+{#                    <option value="{{ item.model_id }}" >{{ item.model_name }}</option>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+{#        </select>#}
+{#    </span>#}
+    </div>
+    <div class="ibox ibox-content">
+    <div id="table_toolbar" class="btn-group" role="group">
+        <div class="btn-group">
+            {% if current_user.user_role_type=='公司管理员' or current_user.can(64, session['project_id']) %}
+            <label id="up" title="Upload image file" for="touxiang" class="btn btn-primary">
+                <input type="file" accept="file/*" name="file" id="touxiang" class="hide" onchange="ajaxFileUpload()">
+                导入回测数据
+            </label>
+            {% endif %}
+        </div>
+    <span class="col col-sm-5" style="text-align: right">
+        <select id="select-model" class="selectpicker show-tick" autocomplete="off">
+        {% if items is not none %}
+            {% for item in models %}
+                {% if item.model_id == model_id %}
+                    <option value="{{ item.model_id }}" selected='selected'>{{ item.model_name }}</option>
+                {% else %}
+                    <option value="{{ item.model_id }}" >{{ item.model_name }}</option>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        </select>
+    </span>
+    </div>
+
+    <table id="dataTable" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%"
+           style="display: none">
+        <thead>
+        <tr>
+            {% block tableHead %}
+                {{ table_select("all") }}
+                <th>回测数据编号</th>
+                <th>所属项目</th>
+                <th>上传时间</th>
+                <th>节段编号</th>
+                <th>状态</th>
+            {% endblock %}
+        </tr>
+        </thead>
+        <tbody>
+        {% if items is not none %}
+        {% for item in items %}
+            {% set itemLoop = loop %}
+            <tr>
+                {{ table_select(item.surveyed_data_id) }}
+                <td>
+                    <a href="{{ url_for('main.admin_surveyed_data_detail',surveyed_data_id=item.surveyed_data_id) }}">{{ item.surveyed_data_number }}</a>
+                </td>
+                <td>{{ item.project.project_name }}</td>
+                <td>{{ item.surveyed_data_time }}</td>
+                <td>{{ item.segment.segment_number }}</td>
+                <td style="text-align: center">
+                {% if item.surveyed_data_status == '待审核' %}
+                    {% if current_user.user_role_type== '公司管理员' or current_user.can(32, session['project_id']) %}
+                        <button id="{{ item.surveyed_data_id }}" class="btn verify-btn btn-warning">待审核</button>
+                    {% else %}
+                        <button id="{{ item.surveyed_data_id }}" class="btn verify-btn btn-warning" disabled="true">待审核</button>
+                    {% endif %}
+                {% elif item.surveyed_data_status == '已修改' %}
+                    <button id="{{ item.surveyed_data_id }}" class="btn verify-btn btn-default" disabled="true">已修改</button>
+                {% elif item.surveyed_data_status =="submit" %}
+                    <button id="{{ item.surveyed_data_id }}" class="btn verify-btn btn-danger" disabled="true">不可用</button>
+                {% elif item.surveyed_data_status =="已审核" %}
+                    <button id="{{ item.surveyed_data_id }}" class="btn verify-btn btn-primary" disabled="true">已审核</button>
+                {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}
+{% block otherContents %}
+    {{ confirm_dialog("confirm_error_range","确认上传","回测数据误差超过你设定的值，你确定要上传吗？") }}
+
+{% endblock %}

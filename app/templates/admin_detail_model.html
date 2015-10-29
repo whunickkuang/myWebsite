@@ -1,0 +1,1645 @@
+{% extends "admin_base.html" %}
+{% from "html_utils.html" import table_select, css_file, js_file %}
+{% from "html_utils.html" import confirm_dialog, no_survey_data_dialog, model_casted_complete_dialog %}
+{% set activeMenu = "menu_model_management" %}
+{% block mainTitle %}模型详情{% endblock %}
+{% block css %}
+    {{ css_file("css/chart.css") }}
+    {{ css_file("libs/plugins/dataTables/dataTables.bootstrap.css") }}
+    {{ css_file("libs/plugins/jqueryStep/jquery.steps.css") }}
+{% endblock %}
+{% block otherjs %}
+    {{ js_file("libs/plugins/dataTables/jquery.dataTables.min.js") }}
+    {{ js_file("libs/plugins/dataTables/dataTables.bootstrap.js") }}
+    {{ js_file("js/drawImage.js") }}
+    {{ js_file("libs/plugins/jqueryStep/jquery.steps.js") }}
+    {{ js_file("js/modelDetail.js") }}
+    {{ js_file("libs/plugins/highcharts/highcharts.js") }}
+    {{ js_file("libs/plugins/datepicker/moment.js") }}
+{{ js_file("libs/plugins/datepicker/daterangepicker.js") }}
+{#    <script type="text/javascript" src="jquery-2.1.3.min.js"></script>#}
+{#    <script type="text/javascript" src="highcharts.js"></script>#}
+    <!--<script type="text/javascript" src="exporting.js"></script>-->
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        var offsetFlagInSelect;
+        var select_control_line_id;
+        var position;
+        var is_theoretical;
+        function changeGPinControlLine(type,pos) {
+            if (type == "setup") {
+                is_theoretical = 1;
+                select_control_line_id = $("#select_role_setup option:selected").val();
+                if ($("#controlSetupOffset").prop("checked") == true) {
+                    offsetFlagInSelect = 1;
+                } else {
+                    offsetFlagInSelect = 0;
+                }
+                position = $('#setup_radio label.active').children("input").val();
+            }
+            if (type == "survey") {
+                is_theoretical = 0;
+                select_control_line_id = $("#select_role_survey option:selected").val();
+                if ($("#controlSurveyOffset").prop("checked") == true) {
+                    offsetFlagInSelect = 1;
+                } else {
+                    offsetFlagInSelect = 0;
+                }
+                position = $('#survey_radio label.active').children("input").val();
+            }
+            if (type == "compare") {
+                is_theoretical = 2;
+                select_control_line_id = $("#select_role_compare option:selected").val();
+                if ($("#controlCompareOffset").prop("checked") == true) {
+                    offsetFlagInSelect = 1;
+                } else {
+                    offsetFlagInSelect = 0;
+                }
+                position = $('#compare_radio label.active').children("input").val();
+
+            }
+
+            if(pos != ""){
+                position = pos;
+            }
+            //alert($("#select_role_setup  option:selected").text());
+            $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_control_line_data',model_id=node_model_id) }}',
+                    {
+                        flag_offset: offsetFlagInSelect,
+                        flag_theoretical:is_theoretical,
+                        control_line_data_id:select_control_line_id,
+                        position:position
+                    },
+                    function (data) {
+                var setupdata = data.control_line_setup;
+                var surveydata = data.control_line_survey;
+                        console.log("setdata"+setupdata);
+                        console.log("surveydata"+surveydata);
+                if (type == "setup") {
+                    changeTable('2',position,type,setupdata);
+                    //drawImgs("mc1","mc2",position,setupdata,null);
+                    drawImgs("container","container2",position,setupdata,null,"setup");
+
+                }
+                if (type == "survey") {
+                    changeTable('3',position,type,surveydata);
+
+                    drawImgs("container3","container4",position,surveydata,null,"survey");
+                }
+                if (type == "compare") {
+                    changeTable('4',position,type,setupdata);
+                    drawImgs("container5","container6",position,setupdata,surveydata,"compare");
+                }
+            });
+        }
+    </script>
+    {#hover关联脚本#}
+    <script>
+        $(function () {
+            $("table > tbody > tr").hover(function () {
+                        $(this).addClass("hover-collect");
+                        t = $(".hover-collect > td:eq(0)").text();//确定对象行
+                        $("table>tbody>tr").each(function () {
+                            $(this).children('td:eq(0)').addClass("td-tag");
+                        });
+                        $(".td-tag:contains(" + t + ")").parent().addClass("hover-collect");
+                    },
+                    function () {
+                        $("table > tbody > tr").removeClass("hover-collect");
+                    })
+        })
+    </script>
+    <script type=text/javascript>
+        var list;
+        var type;
+        $(document).ready(function () {
+            var divwidth = $("#page-wrapper").width();
+            divwidth = divwidth-45;
+            if(divwidth > 1100){
+               divwidth = 1100;
+            }
+            if(divwidth < 800)
+                divwidth = 800;
+            $("#mc1").width(divwidth+'px');
+            $("#mc2").width(divwidth+'px');
+            $("#mc3").width(divwidth+'px');
+            $("#mc4").width(divwidth+'px');
+            $("#mc_compare_xy").width(divwidth+'px');
+            $("#mc_compare_xz").width(divwidth+'px');
+            $(window).resize(function(){
+            var divwidth = $("#page-wrapper").width();
+            divwidth = divwidth-45;
+            if(divwidth > 1100){
+               divwidth = 1100;
+            }
+            if(divwidth < 800)
+                divwidth = 800;
+            $("#mc1").width(divwidth+'px');
+            $("#mc2").width(divwidth+'px');
+            $("#mc3").width(divwidth+'px');
+            $("#mc4").width(divwidth+'px');
+            $("#mc_compare_xy").width(divwidth+'px');
+            $("#mc_compare_xz").width(divwidth+'px');
+
+        });
+
+
+
+
+            var nodes_data;
+            $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_node_camber',model_id=node_model_id) }}', {}, function (data) {
+                nodes_data = data.result;
+                var list_node = [];
+                nodes_data.forEach(function(e){
+                    var node_data = [];
+                    node_data.push(e['node_x_coord']);
+                    node_data.push(e['node_y_coord']);
+                    node_data.push(e['node_z_coord']);
+                    node_data.push(e['node_number']);
+                    list_node.push(node_data);
+            });
+               // list_node.push([100,0,0,"106"]);
+                list = escape(JSON.stringify(list_node));
+                type =  1;
+                $("#iframe3d").attr("src","{{ url_for('static',filename="libs/plugins/threejs/draw3d.html") }}"+"?code="+list+"&type=" + type);
+                    });
+
+         var initFlag = false;
+            var initFlag2 = false;
+            var initFlag5 = false;
+            var tabFlag;
+            $("#wizard").steps({
+                headerTag: "h3",
+                saveState: true,
+                bodyTag: "section",
+                enableCancelButton: false,
+                enableFinishButton: true,
+                showFinishButtonAlways: false,
+                labels: {
+                    cancel: "取消",
+                    current: "current step:",
+                    pagination: "Pagination",
+                    finish: "完成",
+                    next: "下一步",
+                    previous: "返回",
+                    loading: "Loading ..."
+                },
+                onStepChanging: function (event, currentIndex, newIndex) {
+
+                    if(currentIndex==1&&newIndex==2){
+                        var is_simply;
+                        function drawThirdStep(is_simply){
+                            $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_process_survey_data',model_id=node_model_id) }}', {}, function (data) {
+                     var survey_data = data.survey_data;
+                        if(survey_data==null){
+                            $("#wizard").steps("previous");
+                            $("#no_survey_data").modal('show');
+                        var no_survey_data = $("#no_survey_data .btn-primary");
+                            var close = $("#no_survey_data .close");
+                            close.click(function(){
+                                $("#no_survey_data").modal('hide');
+                        });
+                            no_survey_data.click(function(){
+                            $("#no_survey_data").modal('hide');
+                        });
+                        }else{
+                            $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_process_init',model_id=node_model_id) }}', {}, function (data) {
+
+                                var order = data.order_data;
+                                var survey_data = data.survey_data;
+                                var match_number_json = data.last_segment_number;
+                                var match_number = match_number_json['last_segment_number'];
+                            var segment_number = order['segment_number'];
+                            if(match_number==0){
+                                 var canvas = document.getElementById("mcThirdStep");
+                                  var ic = canvas.getContext("2d");
+                                  drawProcessAllOrder(order,survey_data,ic,3,true,is_simply);
+                            }
+                            else{
+                                canvas = document.getElementById("mcThirdStep");
+                                   ic = canvas.getContext("2d");
+                                   drawProcessAllOrder(order,survey_data,ic,3,false,is_simply);
+                            }
+                         });
+                        }
+
+            });
+
+                        }
+                        $("#simplyThird").click(function () {
+                            is_simply = $("#simplyThird").prop("checked");
+                            drawThirdStep(is_simply);
+                        });
+
+                        is_simply = $("#simplyThird").prop("checked");
+                        drawThirdStep(is_simply);
+                       }
+                    if (currentIndex == 4) {
+                        return false;
+                    }
+                    if (currentIndex == 0 && newIndex == 3) {
+                        return false;
+                    }
+                    if (currentIndex == 0 && newIndex == 3) {
+                        return false;
+                    }
+                    if (currentIndex == 0 && newIndex == 2) {
+                        return false;
+
+                    }
+                    if (currentIndex == 1 && newIndex == 4) {
+                        return false;
+                    }
+                    if (currentIndex == 1 && newIndex == 3) {
+                        return false;
+                    }
+                    if (currentIndex == 2 && newIndex == 3) {
+                        var out = false;
+                        $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_check_survey_data_out') }}', {}, function (data) {
+                            var result = data.checkOut;
+                            if (result['outRange'] == 1) {
+
+                                out = true;
+                                $("#set").css("display", "block");
+
+                            }
+                        });
+
+                        $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_error_range_check',model_id=node_model_id) }}', {}, function (data) {
+                            var result = data["result"]
+                            var adjust_length = result["adjust_length"];
+                            var v_error = result["delta_v"];
+                            var s_error = result["delta_s"];
+                            var v_range = result["model_v_range"];
+                            var s_range = result["model_s_range"];
+
+
+                            var adjust_select = $("#confirm_cast .selectpicker");
+                            var option = $("#confirm_cast option");
+                            option.remove();
+                            var value = 1;
+                            adjust_select.append("<option value='" + value + "' selected>" + value + "</option>");
+                            for(value=2;value<=adjust_length;value ++) {
+                                adjust_select.append("<option value='" + value + "'>" + value + "</option>");
+                            }
+                            adjust_select.selectpicker("refresh");
+                            if (adjust_length != 0) {
+                                $("#adjust").css("display", "block");
+                            }else{
+                                $("#adjust").css("display", "none");
+                            }
+                            if(v_error < v_range && s_error < s_range){
+                                $("#error_range").css("display", "none");
+                            }else{
+                                $("#error_range").css("display", "block");
+                                $("#s_delta").text(s_error);
+                                $("#v_delta").text(v_error);
+                            }
+                        });
+                        $("#confirm_cast").modal('show');
+
+
+                        var confirm_btn = $("#confirm_cast .btn-primary");
+                        var close_btn = $("#confirm_cast .close");
+                        close_btn.click(function(){
+                            $("#confirm_cast").modal('hide');
+                            $("#wizard").steps("previous");
+                        });
+                        confirm_btn.click(function () {
+                            $("#confirm_cast").modal('hide');
+                            $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_control_line_gpdata',model_id=node_model_id) }}', {}, function (data) {
+                            });
+                            $("#wizard").steps("next");
+                        });
+                        var demiss_btn = $("#dismiss_btn");
+                        demiss_btn.click(function () {
+                            $("#confirm_cast").modal('hide');
+                            $("#wizard").steps("previous");
+                        });
+
+                    }
+                    return true;
+                },
+                onStepChanged: function (event, currentIndex, priorIndex) {
+                    if(currentIndex==4){
+                        var castTime = $('#castFinishTime').val();
+                        var adjust_length = $('#adjust_length_picker').val();
+                        $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_process_finish',model_id=node_model_id) }}',
+                                {castTime:castTime,adjust_length:adjust_length}, function (data) {
+                        var result = data.result;
+                        if(result['status']==1){
+
+                             window.location = "{{ url_for('main.admin_model_list') }}";
+                        }
+
+                         });
+                    }
+                    if(currentIndex==2){
+                        $('#castFinishTime').daterangepicker({ format: 'YYYY-MM-DD',singleDatePicker: true }, function(start, end, label) {
+                    console.log(start.toISOString(), end.toISOString(), label);
+                            //alert( $('#castFinishTime').val());
+                  });
+
+                    }
+                    if(currentIndex==1){
+                        var is_simply;
+                        function DrawSecondStep(is_simply){
+
+                            $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_process_init',model_id=node_model_id) }}', {}, function (data) {
+
+                        var order2 = data.order_data;
+                            var survey_data = data.survey_data;
+                            var match_number_json = data.last_segment_number;
+                            var match_number = match_number_json['last_segment_number'];
+                            var segment_number = order2['segment_number'];
+                            if(match_number==0){
+                                 var canvas = document.getElementById("mcSecondStep");
+                                  var ic = canvas.getContext("2d");
+                                  drawProcessAllOrder(order2,survey_data,ic,2,true,is_simply);
+                            }
+                            else{
+                                 canvas = document.getElementById("mcSecondStep");
+                                   ic = canvas.getContext("2d");
+                                   drawProcessAllOrder(order2,survey_data,ic,2,false,is_simply);
+                            }
+
+                         });
+
+                        }
+                        $("#simplySecond").click(function () {
+                            is_simply = $("#simplySecond").prop("checked");
+                            DrawSecondStep(is_simply);
+                        });
+                        is_simply = $("#simplySecond").prop("checked");
+
+
+
+                        DrawSecondStep(is_simply);
+
+                      }
+
+                },
+                onFinishing: function (event, currentIndex) {
+
+                    return true;
+                },
+                onFinished: function (event, currentIndex) {
+
+                }
+            });
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                // 获取已激活的标签页的名称
+                function drawFirstStep(is_simply){
+
+                         $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_process_init',model_id=node_model_id) }}', {}, function (data) {
+
+                        var order = data.order_data;
+
+
+{#                        判断模型是否浇筑完成#}
+                        var status = data.status;
+                        var survey_data = data.survey_data;
+                        if(status['status']==1){
+                            $("#model_casted_complete").modal('show');
+                        var model_casted_complete = $("#model_casted_complete .btn-primary");
+                            var close = $("#model_casted_complete .close");
+                            close.click(function(){
+                                $('#myTab li:eq(2) a').tab('show') ;
+{#                                window.location = "{{ url_for('main.admin_model_list') }}";#}
+                        });
+                            model_casted_complete.click(function(){
+                            $("#model_casted_complete").modal('hide');
+                                $('#myTab li:eq(2) a').tab('show') ;
+{#                                window.location = "{{ url_for('main.admin_model_list') }}";#}
+                        });
+
+                        }
+                        else{
+                            var match_number_json = data.last_segment_number;
+                            var match_number = match_number_json['last_segment_number'];
+                            var segment_number = order['segment_number'];
+                            if(match_number==0){
+                                  $(".processNumberShow").text("");
+                                  $(".processNumberShow").text("本节段为初始浇筑节段,   当前正在浇筑节段");
+                                  $(".processNumberShowSegment").text(segment_number);
+                                  var canvas = document.getElementById("mcFirstStep");
+                                  var ic = canvas.getContext("2d");
+
+                                  drawProcessAllOrder(order,survey_data,ic,1,true,is_simply);
+                            }
+                            else{
+                                  $(".processNumberShow").text("");
+                                  $(".processNumberShow").text("设置匹配浇筑节段"+match_number+",当前正在浇筑节段");
+                                 $(".processNumberShowSegment").text(segment_number);
+                                   canvas = document.getElementById("mcFirstStep");
+                                   ic = canvas.getContext("2d");
+                                   drawProcessAllOrder(order,survey_data,ic,1,false,is_simply);
+                            }
+
+
+                            }
+
+                         });
+
+                    }
+                var activeTab = $(e.target).text();
+                if (activeTab == '过程') {
+                    var is_simply;
+                    $("#simplyFirst").click(function () {
+                            is_simply = $("#simplyFirst").prop("checked");
+                            drawFirstStep(is_simply);
+                        });
+                        is_simply = $("#simplyFirst").prop("checked");
+
+
+                       drawFirstStep(is_simply);
+
+                }
+                if (activeTab == '节段' && initFlag == false) {
+                    $('table.display').dataTable({
+                        language: {
+                            "url": "{{ url_for('static',filename='libs/plugins/dataTables/Chinese.json') }}"
+                        },
+                        searching: false,
+                        //aaSorting: [[1, "desc"]],
+                        ordering: false,
+
+                        //columnDefs: [{ "orderable": false, "targets": 0 }],
+                        "scrollY": "200px",
+                        "scrollCollapse": true,
+                        "scrollX": true,
+                        "paging": false
+                    });
+                    initFlag = true;
+
+                }
+                if (activeTab == '控制线' && initFlag2 == false) {
+{#                    $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_control_line_gpdata',model_id=node_model_id) }}', {offsetFlagInSelect:0}, function (data) {#}
+{#                        var segdata = data.segments_data_control_setup;#}
+{#                        drawImapge(segdata, "GP-C");#}
+{#                    });#}
+                    changeGPinControlLine("setup",'');
+
+                    var initFlag4 = false;
+
+                    $('table.display2 ').dataTable({
+                        language: {
+                            "url": "{{ url_for('static',filename='libs/plugins/dataTables/Chinese.json') }}"
+                        },
+                        searching: false,
+                        ordering: false,
+
+                        "scrollY": "400px",
+                        "scrollCollapse": true,
+                        "scrollX": true,
+                        "paging": false
+                    });
+                    $('table.displaySeg2 ').dataTable({
+                        language: {
+                            "url": "{{ url_for('static',filename='libs/plugins/dataTables/Chinese.json') }}"
+                        },
+                        searching: false,
+                        ordering: false,
+
+                        "scrollY": "400px",
+                        "scrollCollapse": true,
+                        "scrollX": true,
+                        "paging": false
+                    });
+                    initFlag2 = true;
+
+                    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                        $(".controlLineOffset").prop("checked", false);
+                        //var activeTab2 = $(e.target).text();
+                        var activeTab2 = $(e.target).index();
+                        if (activeTab2 == 1 && initFlag4 == false) {
+{#                            $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_control_line_gpdata',model_id=node_model_id) }}', {}, function (data) {#}
+{#                                var segdata2 = data.segments_data_control_setup;#}
+{#                                drawImageInSurvey(segdata2, "GP-C");#}
+{#                            });#}
+                            changeGPinControlLine("survey",'');
+                            $('table.display3').dataTable({
+                                language: {
+                                    "url": "{{ url_for('static',filename='libs/plugins/dataTables/Chinese.json') }}"
+                                },
+                                searching: false,
+                                ordering: false,
+
+                                "scrollY": "250px",
+                                "scrollCollapse": true,
+                                "scrollX": true,
+                                "paging": false
+                            });
+                            $('table.displaySeg3').dataTable({
+                                language: {
+                                    "url": "{{ url_for('static',filename='libs/plugins/dataTables/Chinese.json') }}"
+                                },
+                                searching: false,
+                                ordering: false,
+
+                                "scrollY": "250px",
+                                "scrollCollapse": true,
+                                "scrollX": true,
+                                "paging": false
+                            });
+                            initFlag4 = true;
+                        }
+                        if (activeTab2 == 2 && initFlag5 == false) {
+{#                            $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_control_line_gpdata',model_id=node_model_id) }}', {}, function (data) {#}
+{#                                var segdata2 = data.segments_data_control_setup;#}
+{#                                drawImageInCompare(segdata2,"GP-C");#}
+{#                            });#}
+                            changeGPinControlLine("compare",'');
+                            $('table.display4').dataTable({
+                                language: {
+                                    "url": "{{ url_for('static',filename='libs/plugins/dataTables/Chinese.json') }}"
+                                },
+                                searching: false,
+                                ordering: false,
+
+                                "scrollY": "250px",
+                                "scrollCollapse": true,
+                                "scrollX": true,
+                                "paging": false
+                            });
+                            $('table.displaySeg4').dataTable({
+                                language: {
+                                    "url": "{{ url_for('static',filename='libs/plugins/dataTables/Chinese.json') }}"
+                                },
+                                searching: false,
+                                ordering: false,
+
+                                "scrollY": "250px",
+                                "scrollCollapse": true,
+                                "scrollX": true,
+                                "paging": false
+                            });
+                            initFlag5 = true;
+                        }
+                    });
+                }
+            });
+
+            var camberCheckBoxStatus;
+            var offsetCheckBoxStatus;
+            var controlLineOffsetStatus;
+            var select_value;
+            {# 控制线中测量值点击测量钉偏置：#}
+            $("#controlSurveyOffset").click(function () {
+                changeGPinControlLine("survey",'');
+                {#                    select_value = $("#select_role_survey  option:selected").text();#}
+                {#                    if ($("#controlSurveyOffset").prop("checked") == true) {#}
+                {#                        controlLineOffsetStatus = 1;#}
+                {#                    } else {#}
+                {#                        controlLineOffsetStatus = 0;#}
+                {#                    }#}
+                {#                    $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_control_offset',model_id=node_model_id) }}', {controlLineOffsetStatus: controlLineOffsetStatus}, function (data) {#}
+                {#                        var segdata = data.segments_data_control_setup;#}
+                {#                        changeControlSegSurveyTable(segdata, select_value);#}
+                {#                    });#}
+            });
+            {#控制线中设置值点击测量钉偏置：#}
+            $("#controlSetupOffset").click(function () {
+                changeGPinControlLine("setup",'');
+                {#                    select_value = $("#select_role_setup  option:selected").text();#}
+                {##}
+                {#                    if ($("#controlSetupOffset").prop("checked") == true) {#}
+                {#                        controlLineOffsetStatus = 1;#}
+                {#                    } else {#}
+                {#                        controlLineOffsetStatus = 0;#}
+                {#                    }#}
+                {#                    $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_control_offset',model_id=node_model_id) }}', {controlLineOffsetStatus: controlLineOffsetStatus}, function (data) {#}
+                {#                        var segdata = data.segments_data_control_setup;#}
+                {#                        changeControlSegTable(segdata, select_value);#}
+                {#                    });#}
+            });
+            {#控制线中比较点击测量钉偏置：#}
+            $("#controlCompareOffset").click(function () {
+                changeGPinControlLine("compare",'');
+                {#                    select_value = $("#select_role_compare  option:selected").text();#}
+                {##}
+                {#                    if ($("#controlCompareOffset").prop("checked") == true) {#}
+                {#                        controlLineOffsetStatus = 1;#}
+                {#                    } else {#}
+                {#                        controlLineOffsetStatus = 0;#}
+                {#                    }#}
+                {#                    $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_control_offset',model_id=node_model_id) }}', {controlLineOffsetStatus: controlLineOffsetStatus}, function (data) {#}
+                {#                        var segdata = data.segments_data_control_setup;#}
+                {#                        changeControlSegCompareTable(segdata, select_value);#}
+                {#                    });#}
+            });
+            {# 节段表中点击camber按钮：#}
+            $("#segmentCamber").click(function () {
+
+                if ($("#segmentCamber").prop("checked") == true) {
+                    camberCheckBoxStatus = 1;
+                } else {
+                    camberCheckBoxStatus = 0;
+                }
+                if ($("#segmentOffset").prop("checked") == true) {
+                    offsetCheckBoxStatus = 1;
+                } else {
+                    offsetCheckBoxStatus = 0;
+                }
+
+                $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_segment_data',model_id=model.model_id) }}', {
+                    camberCheckBoxStatus: camberCheckBoxStatus,
+                    offsetCheckBoxStatus: offsetCheckBoxStatus
+                }, function (data) {
+
+                    showSegmentData(data);
+
+
+                });
+
+
+
+            });
+            {#节段表中点击测量钉按钮：#}
+            $("#segmentOffset").click(function () {
+                if ($("#segmentCamber").prop("checked") == true) {
+                    camberCheckBoxStatus = 1;
+                } else {
+                    camberCheckBoxStatus = 0;
+                }
+                if ($("#segmentOffset").prop("checked") == true) {
+                    offsetCheckBoxStatus = 1;
+                } else {
+                    offsetCheckBoxStatus = 0;
+                }
+
+                $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_segment_data',model_id=model.model_id) }}', {
+                    camberCheckBoxStatus: camberCheckBoxStatus,
+                    offsetCheckBoxStatus: offsetCheckBoxStatus
+                }, function (data) {
+                    showSegmentData(data);
+
+
+                });
+
+            });
+            {# 节点表中点击camber按钮：#}
+            $("#nodeCamber").click(function () {
+                if ($("#nodeCamber").prop("checked") == true) {
+                    $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_node_camber',model_id=node_model_id) }}', {}, function (data) {
+                        setNodeCamber(data);
+                    });
+                }
+                if ($("#nodeCamber").prop("checked") == false) {
+                    $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_node_camber',model_id=node_model_id) }}', {}, function (data) {
+                        disNodeCamber(data);
+                    });
+                }
+            });
+        });
+            function setView1()
+            {
+                //list = escape(JSON.stringify(list));
+                type =  1;
+                $("#iframe3d").attr("src","{{ url_for('static',filename="libs/plugins/threejs/draw3d.html") }}"+"?code="+list+"&type=" + type);
+            }
+            function setView2()
+            {
+                //list = escape(JSON.stringify(list));
+                type =  2;
+                $("#iframe3d").attr("src","{{ url_for('static',filename="libs/plugins/threejs/draw3d.html") }}"+"?code="+list+"&type=" + type);
+            }
+            function setView3()
+            {
+                //list = escape(JSON.stringify(list));
+                type =  3;
+                $("#iframe3d").attr("src","{{ url_for('static',filename="libs/plugins/threejs/draw3d.html") }}"+"?code="+list+"&type=" + type);
+            }
+            function setView4()
+            {
+                //list = escape(JSON.stringify(list));
+                type =  4;
+                $("#iframe3d").attr("src","{{ url_for('static',filename="libs/plugins/threejs/draw3d.html") }}"+"?code="+list+"&type=" + type);
+            }
+            function setView5()
+            {
+                //list = escape(JSON.stringify(list));
+                type =  5;
+                $("#iframe3d").attr("src","{{ url_for('static',filename="libs/plugins/threejs/draw3d.html") }}"+"?code="+list+"&type=" + type);
+            }
+            function setView6()
+            {
+                //list = escape(JSON.stringify(list));
+                type =  6;
+                $("#iframe3d").attr("src","{{ url_for('static',filename="libs/plugins/threejs/draw3d.html") }}"+"?code="+list+"&type=" + type);
+            }
+
+    </script>
+
+{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('main.admin_edit_project',projectId=model.project.project_id) }}">{{ model.project.project_name }}</a>
+        </li>
+        <li>
+            <a href="{{ url_for('main.admin_model_list') }}">模型列表</a>
+        </li>
+        <li class="active">
+            <strong>{{ model.model_name }}</strong>
+        </li>
+    </ol>
+{% endblock %}
+{% block mainContent %}
+    <ul id="myTab" class="nav nav-tabs">
+        <li class="active">
+            <a href="#home" data-toggle="tab">
+                总体设置
+            </a>
+        </li>
+        <li><a href="#node" data-toggle="tab">节点</a></li>
+        <li><a href="#segment" data-toggle="tab">节段</a></li>
+        <li><a href="#control" data-toggle="tab">控制线</a></li>
+        <li><a href="#produre" data-toggle="tab">过程</a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <!--总体设置-->
+        <div class="tab-pane fade in active" id="home">
+{#            <div class="col-lg-12 ">#}
+{#                <form class="form-horizontal" role="form">#}
+                    <div class="ibox" style ="margin-top: 20px;">
+                        <div class="ibox ibox-title">
+                            <div class="col col-md-6">模型信息</div>
+                        </div>
+                        <div class="ibox ibox-content" style="height: 60px;">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="name" class="col-sm-4 control-label" style="margin-top: 6px;">名称：</label>
+
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" id="name"
+                                               placeholder="{{ model.model_name }}" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="offset" class="col-sm-4 control-label" style="margin-top: 6px;">偏置：</label>
+
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" id="offset"
+                                               placeholder="{{ model.model_offset }}" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="high" class="col-sm-4 control-label" style="margin-top: 6px;">高度：</label>
+
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" id="high"
+                                               placeholder="{{ model.model_evaluation }}" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+{#                        <div class="form-group">#}
+{#                            <label for="info" class="col-sm-2 control-label">信息</label>#}
+{##}
+{#                            <div class="col-sm-4">#}
+{#                                <input type="text" class="form-control" id="info"#}
+{#                                       placeholder=" unknown">#}
+{#                            </div>#}
+{#                        </div>#}
+
+
+{#                        <div class="form-group">#}
+{#                            <label for="set" class="col-sm-2 control-label">浇筑设置</label>#}
+{##}
+{#                            <div class="col-sm-4">#}
+{#                                <input type="text" class="form-control" id="set"#}
+{#                                       placeholder="MG">#}
+{#                            </div>#}
+{#                        </div>#}
+
+{#                </form>#}
+{#            </div>#}
+{#            <div class="col-lg-12 ">#}
+                <div class="ibox" style ="margin-top: 20px;">
+                        <div class="ibox ibox-title">
+                            <div class="col col-md-6">模型三维立体图</div>
+                        </div>
+                        <iframe id="iframe3d"  width="100%" style=" height: 400px; border: solid; border-color: #E7EAEC; border-width: 1px 0 0 0;" src="{{ url_for('static',filename="libs/plugins/threejs/draw3d.html") }}">
+                    </iframe>
+                    <input type=button class="btn btn-primary" style="outline: none;" value="正视图" onclick="setView1()">
+                    <input type=button class="btn btn-primary" style="outline: none;" value="俯视图" onclick="setView2()">
+                    <input type=button class="btn btn-primary" style="outline: none;" value="侧视图" onclick="setView3()">
+                    <input type=button class="btn btn-primary" style="outline: none;" value="15°视图" onclick="setView4()">
+                    <input type=button class="btn btn-primary" style="outline: none;" value="最适大小" onclick="setView5()">
+                    <input type=button class="btn btn-primary" style="outline: none;" value="显示实体" onclick="setView6()">
+
+                </div>
+{#            </div>#}
+        </div>
+
+        <!--节点-->
+        <div class="tab-pane fade" id="node">
+            <div class="ibox" style ="margin-top: 20px;">
+                <div class="ibox-title">
+                    <div class="col-sm-2">设置</div>
+                    <div class="col-sm-2 col-sm-offset-6"><input id="nodeCamber" type="checkbox">包括预拱度</div>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox ibox-content">
+                    <div class="row">
+                        <table id="nodeExpect" class="table table-bordered table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>节点编号</th>
+                                <th>X-坐标系</th>
+                                <th>Y-坐标系</th>
+                                <th>Z-坐标系</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for node in nodes %}
+                                {% set itemLoop = loop %}
+                                <tr>
+                                    <td>{{ node.node_number }}</td>
+                                    <td>{{ eps_format % node.node_x_coord }}</td>
+                                    <td>{{ eps_format % node.node_y_coord }}</td>
+                                    <td>{{ eps_format % node.node_z_coord }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="ibox">
+                <div class="ibox-title">
+                    <label class="text-left">浇筑后（测量值）</label>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <table id="nodeActual" class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>节点编号</th>
+                            <th>X-坐标系</th>
+                            <th>Y-坐标系</th>
+                            <th>Z-坐标系</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for node in nodes %}
+
+                            {% set itemLoop = loop %}
+                            {% if node.node_surveyed_x_coord!=none %}
+                            <tr>
+                                <td>{{ node.node_number }}</td>
+                                <td>{{ eps_format % node.node_surveyed_x_coord }}</td>
+                                <td>{{ eps_format % node.node_surveyed_y_coord }}</td>
+                                <td>{{ eps_format % node.node_surveyed_z_coord }}</td>
+                            </tr>
+                            {% endif %}
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm-6">
+
+
+            </div>
+            <div class="ibox">
+                <div class="ibox-title">
+                    <label class="text-left">预拱度</label>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>节点编号</th>
+                            <th>X-坐标系</th>
+                            <th>Y-坐标系</th>
+                            <th>Z坐标系</th>
+                            <th>Phi X</th>
+                            <th>Phi Y</th>
+                            <th>Phi Z</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for node in nodes %}
+                            {% set itemLoop = loop %}
+                            <tr>
+                                <td>{{ node.node_number }}</td>
+                                <td>{{ eps_format % node.node_camber_x_coord }}</td>
+                                <td>{{ eps_format % node.node_camber_y_coord }}</td>
+                                <td>{{ eps_format % node.node_camber_z_coord }}</td>
+                                <td>{{ eps_format % node.node_camber_phi_x }}</td>
+                                <td>{{ eps_format % node.node_camber_phi_y }}</td>
+                                <td>{{ eps_format % node.node_camber_phi_z }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--节段-->
+        <div class="tab-pane gray-bg" id="segment">
+        <div class="ibox" style ="margin-top: 20px;">
+        <div class="ibox-title">
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <table id="segMatch" class="display table table-bordered table-striped table-hover table-responsive">
+                    <thead>
+                    <tr>
+                        <th>节段编号</th>
+                        <th>匹配节段</th>
+                        <th>方向</th>
+                        <th>节点1</th>
+                        <th>节点2</th>
+                        <th>状态</th>
+                        <th>日期</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for segment in segments %}
+                        {% set itemLoop = loop %}
+                        <tr>
+                        {% if segment.segment_status=="已完成" %}
+                            <td><a href="{{ url_for('main.admin_detail_segment_process',segment_id=segment.segment_id) }}">{{ segment.segment_number }}</a></td>
+                        {% else %}
+                        <td>{{ segment.segment_number }}</td>
+                        {% endif %}
+                            {% if segment.segment_matching_id==0 %}
+                            <td> </td>
+                            {% else %}<td>{{ segment.segment_matching_id }}</td>
+                            {% endif %}
+                        <td>{{ segment.segment_match_direction }}</td>
+{#                        <td>{{ segment.segment_start_node_number }}</td>#}
+{#                        <td>{{ segment.segment_end_node_number }}</td>#}
+                        <td>{{ segment.start_node.node_number }}</td>
+                        <td>{{ segment.end_node.node_number }}</td>
+                        <td>{{ segment.segment_status }}</td>
+                        {% if segment.segment_casted_date is none %}
+                        <td>未浇筑</td>
+                        {% else %}
+                        <td>{{ segment.segment_casted_date }}</td>
+                        {% endif %}
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+        <div class="ibox">
+            <div class="ibox-title">
+                <div class="col-sm-4">设置</div>
+                <div class="col-sm-4 "><input id="segmentCamber" value="camber" type="checkbox">包括预拱度</div>
+                <div class="col-sm-3 "><input id="segmentOffset" value="offset" type="checkbox">设置测量钉</div>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+            <div class="row">
+                <table id="segIdeal" class="display table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>节段编号</th>
+                        <th>GP-C-X-BEGIN</th>
+                        <th>GP-C-Y-BEGIN</th>
+                        <th>GP-C-Z-BEGIN</th>
+                        <th>GP-R-X-BEGIN</th>
+                        <th>GP-R-Y-BEGIN</th>
+                        <th>GP-R-Z-BEGIN</th>
+                        <th>GP-L-X-BEGIN</th>
+                        <th>GP-L-Y-BEGIN</th>
+                        <th>GP-L-Z-BEGIN</th>
+                        <th>GP-D-X-BEGIN</th>
+                        <th>GP-D-Y-BEGIN</th>
+                        <th>GP-D-Z-BEGIN</th>
+                        <th>GP-C-X-END</th>
+                        <th>GP-C-Y-END</th>
+                        <th>GP-C-Z-END</th>
+                        <th>GP-R-X-END</th>
+                        <th>GP-R-Y-END</th>
+                        <th>GP-R-Z-END</th>
+                        <th>GP-L-X-END</th>
+                        <th>GP-L-Y-END</th>
+                        <th>GP-L-Z-END</th>
+                        <th>GP-D-X-END</th>
+                        <th>GP-D-Y-END</th>
+                        <th>GP-D-Z-END</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for segment_data in seg_thoretical %}
+                        {% set itemLoop = loop %}
+                        {% if segment_data%}
+                        <tr>
+                            <td>{{ segment_data.segment.segment_number }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_C_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_C_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_C_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_R_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_R_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_R_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_L_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_L_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_L_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_D_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_D_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_D_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_C_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_C_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_C_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_R_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_R_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_R_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_L_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_L_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_L_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_D_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_D_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_D_Z }}</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+        <div class="ibox">
+        <div class="ibox-title">
+            <label class='col-sm-2  text-left'>浇筑后（测量值）：</label>
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <table id="segActual" class="display table table-bordered table-striped table-hover" cellspacing="0"
+                       width="100%">
+                    <thead>
+                    <tr>
+                        <th>节段编号</th>
+                        <th>GP-C-X-BEGIN</th>
+                        <th>GP-C-Y-BEGIN</th>
+                        <th>GP-C-Z-BEGIN</th>
+                        <th>GP-R-X-BEGIN</th>
+                        <th>GP-R-Y-BEGIN</th>
+                        <th>GP-R-Z-BEGIN</th>
+                        <th>GP-L-X-BEGIN</th>
+                        <th>GP-L-Y-BEGIN</th>
+                        <th>GP-L-Z-BEGIN</th>
+                        <th>GP-D-X-BEGIN</th>
+                        <th>GP-D-Y-BEGIN</th>
+                        <th>GP-D-Z-BEGIN</th>
+                        <th>GP-C-X-END</th>
+                        <th>GP-C-Y-END</th>
+                        <th>GP-C-Z-END</th>
+                        <th>GP-R-X-END</th>
+                        <th>GP-R-Y-END</th>
+                        <th>GP-R-Z-END</th>
+                        <th>GP-L-X-END</th>
+                        <th>GP-L-Y-END</th>
+                        <th>GP-L-Z-END</th>
+                        <th>GP-D-X-END</th>
+                        <th>GP-D-Y-END</th>
+                        <th>GP-D-Z-END</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for segment_data in seg_actual %}
+                        {% set itemLoop = loop %}
+                        {% if segment_data %}
+
+                        <tr>
+                            <td>{{ segment_data.segment.segment_number }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_C_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_C_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_C_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_R_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_R_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_R_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_L_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_L_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_L_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_D_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_D_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_B_GP_D_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_C_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_C_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_C_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_R_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_R_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_R_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_L_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_L_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_L_Z }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_D_X }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_D_Y }}</td>
+                            <td>{{ eps_format % segment_data.segment_E_GP_D_Z }}</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+            </div>
+        </div>
+        </div>
+        <!--控制线-->
+        <div class="tab-pane panel gray-bg" style="min-width: 845px;" id="control">
+
+        <div class="ibox" style ="margin-top: 20px;">
+            <div class="ibox ibox-title" style="padding-top: 7px;">
+{#                <div class="col col-md-6">#}
+                    <div data-toggle="buttons" class="btn-group">
+                       {# <a onclick="changeGPinControlLine('setup','')" href="#setup" data-toggle="tab" style="color:#808080 "><label class="btn btn-sm btn-white  active"> <input type="radio" id="option1" name="options" style="display:none"> 设置 </label></a>
+                        <a onclick="changeGPinControlLine('survey','')" href="#survey" data-toggle="tab" style="color:#808080 "><label class="btn btn-sm btn-white">  <input type="radio" id="option2" name="options" style="display:none"> 测量 </label></a>
+                        <a onclick="changeGPinControlLine('compare','')" href="#compare" data-toggle="tab" style="color:#808080 "><label class="btn btn-sm btn-white"> <input type="radio" id="option3" name="options" style="display:none"> 比较 </label></a>
+                    #}
+                     <a  href="#setup" data-toggle="tab" style="color:#808080 "><label class="btn btn-sm btn-white  active"> <input type="radio" id="option1" name="options" style="display:none"> 设置 </label></a>
+                        <a  href="#survey" data-toggle="tab" style="color:#808080 "><label class="btn btn-sm btn-white">  <input type="radio" id="option2" name="options" style="display:none"> 测量 </label></a>
+                        <a  href="#compare" data-toggle="tab" style="color:#808080 "><label class="btn btn-sm btn-white"> <input type="radio" id="option3" name="options" style="display:none"> 比较 </label></a>
+
+
+
+                    </div>
+{#                </div>#}
+            </div>
+            <div class="ibox ibox-content" >
+                <div id="myTabContentControl" class="tab-content">
+            <!--控制线-设置-->
+            <div class="tab-pane fade in active" id="setup">
+                <div class="col-sm-12" style="padding: 0px">
+                    <div class="col-sm-4" style="padding: 0px">
+                        <select id="select_role_setup" class="selectpicker show-tick form-control"
+                                onchange="changeGPinControlLine('setup','')">
+                            {% for control_line in segment_control_lines %}
+                                <option value={{ control_line.control_line_data_id }}
+                                        {% if control_line.control_line_data_name == "浇筑曲线" %}
+                                            selected
+                                        {% endif %}>
+                                    {{ control_line.control_line_data_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div data-toggle="buttons" class="col-sm-4 btn-group" id="setup_radio">
+                        <label onclick="changeGPinControlLine('setup','GP-L')" class="btn btn-outline btn-circle btn-primary">
+                            <input type="radio" id="option_setup" name="options" value="GP-L" checked="checked" style="display:none">左</label>
+                        <label onclick="changeGPinControlLine('setup','GP-C')" class="btn btn-outline btn-circle btn-primary  active">
+                            <input type="radio" id="option_setup" name="options" value="GP-C" style="display:none">中</label>
+                        <label onclick="changeGPinControlLine('setup','GP-R')" class="btn btn-outline btn-circle btn-primary">
+                            <input type="radio" id="option_setup" name="options" value="GP-R" style="display:none">右</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input id="controlSetupOffset" class="icheckbox_square-green checked controlLineOffset" value="camber" type="checkbox">测量钉偏置
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div id="container" style="border:1px #000000 solid; min-width:700px; height:400px"></div>
+                <br/>
+                <div id="container2" style="border:1px #000000 solid; min-width:700px;height:400px"></div>
+                <br/>
+{#                        <canvas id="mc1" width="800" height="150"#}
+{#                                style="background:#ffffff;padding:0px;border:1px #ccc solid"></canvas>#}
+{##}
+{#                        <canvas id="mc2" width="800" height="150"#}
+{#                                style="background:#ffffff;padding:0px;border:1px #ccc solid"></canvas>#}
+
+                        <div class="col-sm-12" style="height:60px;"><p></p></div>
+
+                    <div style="overflow:hidden; background-color: #ffffff; width: 100%" >
+                       <form class="form-horizontal" role="form">
+{#                            <div class="col-sm-12" style="padding: 0px">#}
+
+                                <table id="setupNode" class="  display2 table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>节点编号</th>
+                                        <th>X-坐标系</th>
+                                        <th>Y-坐标系</th>
+                                        <th>Z-坐标系</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for node in control_line_setup[1] %}
+                                        {% set itemLoop = loop %}
+                                        <tr>
+                                            <td>{{ node}}</td>
+                                            <td>{{ eps_format % control_line_setup[1][node][0] }}</td>
+                                            <td>{{ eps_format % control_line_setup[1][node][1] }}</td>
+                                            <td>{{ eps_format % control_line_setup[1][node][2] }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+
+                                </table>
+{#                            </div>#}
+                            <div id="controlSegmentSetup" >
+                                <table id="controlSegmentsetupTable"
+                                       class="  displaySeg2 table table-bordered table-striped table-hover table-responsive " width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th style = "text-align: left">节段编号</th>
+                                        <th>GP-C-X-BEGIN</th>
+                                        <th>GP-C-Y-BEGIN</th>
+                                        <th>GP-C-Z-BEGIN</th>
+                                        <th>GP-C-X-END</th>
+                                        <th>GP-C-Y-END</th>
+                                        <th>GP-C-Z-END</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for segment_data in control_line_setup[0]%}
+                                        {% set itemLoop = loop %}
+                                        {% if segment_data %}
+                                        <tr>
+                                            <td>{{ segment_data }}</td>
+                                            <td>{{ eps_format % control_line_setup[0][segment_data][0][0]}}</td>
+                                            <td>{{ eps_format % control_line_setup[0][segment_data][0][1]}}</td>
+                                            <td>{{ eps_format % control_line_setup[0][segment_data][0][2]}}</td>
+
+                                            <td>{{ eps_format % control_line_setup[0][segment_data][1][0]}}</td>
+                                            <td>{{ eps_format % control_line_setup[0][segment_data][1][1]}}</td>
+                                            <td>{{ eps_format % control_line_setup[0][segment_data][1][2]}}</td>
+
+                                        </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+
+                                </table>
+                            </div>
+                       </form>
+                    </div>
+
+    </div>
+                    <!--控制线-测量-->
+                    <div class="tab-pane panel " id="survey">
+
+                        <div class="col-sm-12" style="padding: 0px">
+                            <div class="col-sm-4" style="padding: 0px">
+                                <select id="select_role_survey" class="selectpicker show-tick form-control"
+                                        onchange="changeGPinControlLine('survey','')">
+                                    {% for control_line in segment_control_lines %}
+                                        <option value={{ control_line.control_line_data_id }}
+                                                        {% if control_line.control_line_data_name == "浇筑曲线" %}
+                                                            selected
+                                                        {% endif %}>
+                                            {{ control_line.control_line_data_name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div data-toggle="buttons" class="col-sm-4 btn-group" id="survey_radio">
+                                <label onclick="changeGPinControlLine('survey','GP-L')" class="btn btn-outline btn-circle btn-primary">
+                                    <input type="radio" id="option_survey" name="options" value="GP-L" checked="checked" style="display:none">左</label>
+                                <label onclick="changeGPinControlLine('survey','GP-C')" class="btn btn-outline btn-circle btn-primary  active">
+                                    <input type="radio" id="option_survey" name="options" value="GP-C" style="display:none">中</label>
+                                <label onclick="changeGPinControlLine('survey','GP-R')" class="btn btn-outline btn-circle btn-primary">
+                                    <input type="radio" id="option_survey" name="options" value="GP-R" style="display:none">右</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input id="controlSurveyOffset" class="controlLineOffset" value="camber" type="checkbox">测量钉偏置
+                            </div>
+                        </div>
+
+{#                        <canvas id="mc3" width="800" height="150"#}
+{#                                style="background:#ffffff;padding:0px;border:1px #ccc solid"></canvas>#}
+{#                        <canvas id="mc4" width="800" height="150"#}
+{#                                style="background:#ffffff;padding:0px;border:1px #ccc solid"></canvas>#}
+                        <br/>
+                        <br/>
+                        <div id="container3" style="border:1px #000000 solid;min-width:700px; height:400px"></div>
+                        <br/>
+                        <div id="container4" style="border:1px #000000 solid;min-width:700px;height:400px"></div>
+                        <br/>
+                        <div class="col-sm-12" style="height:80px"><p></p></div>
+
+                        <div style="overflow:hidden; background-color: #ffffff; width: 100%" >
+                        <form class="form-horizontal" role="form">
+{#                            <div class="col-sm-12">#}
+
+                                <table id="surveyedNode" class="  display3 table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>节点编号</th>
+                                        <th>X-坐标系</th>
+                                        <th>Y-坐标系</th>
+                                        <th>Z-坐标系</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for node in control_line_survey[1] %}
+                                        {% set itemLoop = loop %}
+                                        <tr>
+                                            <td>{{ node}}</td>
+                                            <td>{{ eps_format % control_line_survey[1][node][0] }}</td>
+                                            <td>{{ eps_format % control_line_survey[1][node][1] }}</td>
+                                            <td>{{ eps_format % control_line_survey[1][node][2] }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+
+                                </table>
+{#                            </div>#}
+{#                            <div class="col-sm-12">#}
+
+
+                                <table id="controlSegmentsurveyTable"
+                                       class="  displaySeg3 table table-bordered table-striped table-hover table-responsive "
+                                       cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>节段编号</th>
+                                        <th>GP-C-X-BEGIN</th>
+                                        <th>GP-C-Y-BEGIN</th>
+                                        <th>GP-C-Z-BEGIN</th>
+                                        <th>GP-C-X-END</th>
+                                        <th>GP-C-Y-END</th>
+                                        <th>GP-C-Z-END</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for segment_data in control_line_survey[0]%}
+                                        {% set itemLoop = loop %}
+                                        {% if segment_data %}
+                                            <tr>
+                                                <td>{{ segment_data }}</td>
+                                                <td>{{ eps_format % control_line_survey[0][segment_data][0][0]}}</td>
+                                                <td>{{ eps_format % control_line_survey[0][segment_data][0][1]}}</td>
+                                                <td>{{ eps_format % control_line_survey[0][segment_data][0][2]}}</td>
+
+                                                <td>{{ eps_format % control_line_survey[0][segment_data][1][0]}}</td>
+                                                <td>{{ eps_format % control_line_survey[0][segment_data][1][1]}}</td>
+                                                <td>{{ eps_format % control_line_survey[0][segment_data][1][2]}}</td>
+
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+
+                                </table>
+{#                            </div>#}
+                        </form>
+                    </div>
+
+                    </div>
+                    <!--控制线-比较-->
+                    <div class="tab-pane panel" id="compare">
+                        <div class="col-sm-12" style="padding: 0px">
+                            <div class="col-sm-4" style="padding: 0px">
+                                <select id="select_role_compare" class="selectpicker show-tick form-control"
+                                        onchange="changeGPinControlLine('compare','')">
+                                    {% for control_line in segment_control_lines %}
+                                        <option value={{ control_line.control_line_data_id }}
+                                                        {% if control_line.control_line_data_name == "浇筑曲线" %}
+                                                            selected
+                                                        {% endif %}>
+                                            {{ control_line.control_line_data_name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div data-toggle="buttons" class="col-sm-4 btn-group" id="compare_radio">
+                                <label onclick="changeGPinControlLine('compare','GP-L')" class="btn btn-outline btn-circle btn-primary">
+                                    <input type="radio" id="option_compare" name="options" value="GP-L" checked="checked" style="display:none">左</label>
+                                <label onclick="changeGPinControlLine('compare','GP-C')" class="btn btn-outline btn-circle btn-primary  active">
+                                    <input type="radio" id="option_compare" name="options" value="GP-C" style="display:none">中</label>
+                                <label onclick="changeGPinControlLine('compare','GP-R')" class="btn btn-outline btn-circle btn-primary">
+                                    <input type="radio" id="option_compare" name="options" value="GP-R" style="display:none">右</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input id="controlCompareOffset" class="controlLineOffset" value="camber" type="checkbox">测量钉偏置
+                            </div>
+                        </div>
+
+{#                        <canvas id="mc_compare_xy" width="800" height="150"#}
+{#                        style="background:#ffffff;padding:0px;border:1px #ccc solid"></canvas>#}
+{#                        <canvas id="mc_compare_xz" width="800" height="150"#}
+{#                        style="background:#ffffff;padding:0px;border:1px #ccc solid"></canvas>#}
+                        <br/>
+                        <br/>
+                        <div id="container5" style="border:1px #000000 solid; min-width:700px; height:400px"></div>
+                        <br/>
+                        <div id="container6" style="border:1px #000000 solid; min-width:700px;height:400px"></div>
+                        <br/>
+                        <div class="col-sm-12" style="height:80px"><p></p></div>
+
+                    <div style="overflow:hidden; background-color: #ffffff; width: 100%" >
+                        <form class="form-horizontal" role="form">
+{#                            <div class="col-sm-12">#}
+
+                                <table id="compareNode" class=" display4 table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>节点编号</th>
+                                        <th>X-坐标系</th>
+                                        <th>Y-坐标系</th>
+                                        <th>Z-坐标系</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for node in control_line_setup[1] %}
+                                        {% set itemLoop = loop %}
+                                        <tr>
+                                            <td>{{ node}}</td>
+                                            <td>{{ eps_format % control_line_setup[1][node][0] }}</td>
+                                            <td>{{ eps_format % control_line_setup[1][node][1] }}</td>
+                                            <td>{{ eps_format % control_line_setup[1][node][2] }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+
+                                </table>
+{#                            </div>#}
+{#                            <div class="col-sm-12">#}
+
+
+                                <table id="controlSegmentcompareTable"
+                                       class=" displaySeg4 table table-bordered table-striped table-hover table-responsive "
+                                       cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>节段编号</th>
+                                        <th>GP-C-X-BEGIN</th>
+                                        <th>GP-C-Y-BEGIN</th>
+                                        <th>GP-C-Z-BEGIN</th>
+                                        <th>GP-C-X-END</th>
+                                        <th>GP-C-Y-END</th>
+                                        <th>GP-C-Z-END</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for segment_data in control_line_setup[0]%}
+                                        {% set itemLoop = loop %}
+                                        {% if segment_data %}
+                                            <tr>
+                                                <td>{{ segment_data }}</td>
+                                                <td>{{ eps_format % control_line_setup[0][segment_data][0][0]}}</td>
+                                                <td>{{ eps_format % control_line_setup[0][segment_data][0][1]}}</td>
+                                                <td>{{ eps_format % control_line_setup[0][segment_data][0][2]}}</td>
+
+                                                <td>{{ eps_format % control_line_setup[0][segment_data][1][0]}}</td>
+                                                <td>{{ eps_format % control_line_setup[0][segment_data][1][1]}}</td>
+                                                <td>{{ eps_format % control_line_setup[0][segment_data][1][2]}}</td>
+
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+
+                                </table>
+{#                            </div>#}
+                        </form>
+                    </div>
+
+                    </div>
+
+            </div>
+            </div>
+        </div>
+        </div>
+
+        <!--过程-->
+        <div class="tab-pane gray-bg" id="produre" style="margin-top: 15px">
+            <div id="wizard" class="wizard-big">
+              <h3>设置匹配-浇筑</h3>
+
+                <section>
+                   <div class="col-sm-12">
+                       <div class="col-sm-8">
+                           <div id="" class="processNumberShow"></div>
+                           <div class="processNumberShowSegment"></div>
+                       </div>
+                       <div class="col-sm-4" style="text-align: right; top: 4px;"><input id="simplyFirst" class="simply" type="checkbox">简化架构
+                       </div>
+                   </div>
+
+                    <canvas id="mcFirstStep" width="1000" height="600" style="background:#ffffff;padding:0px;border:0px #000000 solid"></canvas>
+
+                </section>
+                <h3>设置测量钉</h3>
+
+                <section class="step-content">
+                    <div class="col-sm-12">
+                       <div class="col-sm-8">
+                           <div id="" class="processNumberShow"></div>
+                           <div class="processNumberShowSegment"></div>
+                       </div>
+                       <div class="col-sm-4" style="text-align: right; top: 4px;"><input id="simplySecond" type="checkbox">简化架构
+                       </div>
+                   </div>
+
+                    <canvas id="mcSecondStep" width="1000" height="600" style="background:#ffffff;padding:0px;border:0px #000000 solid"></canvas>
+                </section>
+
+                <h3>导入测量值</h3>
+
+                <section class="step-content">
+                    <div class="col-sm-12">
+                       <div class="col-sm-8">
+                           <div id="" class="processNumberShow"></div>
+                           <div class="processNumberShowSegment"></div>
+                       </div>
+                       <div class="col-sm-4" style="text-align: right; top: 4px;"><input id="simplyThird" type="checkbox">简化架构
+                       </div>
+                   </div>
+
+                    <canvas id="mcThirdStep" width="1000" height="600" style="background:#ffffff;padding:0px;border:0px #000000 solid"></canvas>
+ <div class="form-group ">
+     <div class="col-sm-7"></div>
+        <label class="col-sm-2 control-label" >设置浇筑时间</label>
+        <div class="col-sm-3"><input type="text" name="castFinishTime" id="castFinishTime" class="form-control" value="{{ date_now }}" />
+        </div>
+    </div>
+                </section>
+
+                <h3>浇筑</h3>
+
+                <section>
+                    <div class="col-sm-12">
+                       <div class="col-sm-8">
+                           <div id="" class="processNumberShow"></div>
+                           <div class="processNumberShowSegment"></div>
+                       </div>
+                       <div class="col-sm-4" style="text-align: right; top: 4px;"><input id="simplyStruct" type="checkbox">简化架构
+                       </div>
+                   </div>
+
+                    <div class="text-center m-t-md">
+                        <h2>浇筑</h2>
+
+                        <p>
+                            This is last content.
+                        </p>
+                    </div>
+                </section>
+
+                <h3>完成</h3>
+
+                <section>
+                    <div class="text-center m-t-md">
+                        <h2>完成</h2>
+
+                        <p>
+                            This is last content.
+                        </p>
+                    </div>
+                </section>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block otherContents %}
+    {{ confirm_dialog("confirm_cast","确认浇筑","你确定要浇筑吗？") }}
+    {{ no_survey_data_dialog("no_survey_data","没有回测数据","回测数据还未导入") }}
+    {{ model_casted_complete_dialog("model_casted_complete","已完成全部浇筑","该模型所有节段全部浇筑完") }}
+
+{% endblock %}

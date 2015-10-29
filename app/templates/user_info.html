@@ -1,0 +1,295 @@
+{% extends "admin_edit_base.html" %}
+{% from "html_utils.html" import table_select %}
+{% set activeMenu = "menu_user_management" %}
+{% block otherjs %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var editFlag = '{{ edit_flag }}';
+            {#               alert(editFlag);#}
+            if (editFlag == '0') {
+                $('.form-control').attr("readonly", "readonly")
+            }
+
+
+        });
+    </script>
+    <script type="text/javascript">
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        $(function(){
+            $(".verify-btn").each(function(){
+                $(this).click(function(){
+                    id = $(this).attr('id');
+                    if($(this).text() == "待审核"){
+                        $.getJSON($SCRIPT_ROOT +'{{ url_for('main.admin_surveyed_data_verifying') }}',{
+                                    surveyed_data_id : id
+                                },
+                                function(data){
+                                    selected_id=data.model;
+                                    window.location = '/user/info/'+{{ session['user_id'] }}+'&'+selected_id;
+                                })
+                }
+                })
+            })
+        })
+    </script>
+    <script>
+        $(function(){
+            $("#select-model").change(function(){
+                user_id = {{ session['user_id'] }};
+                selected_id=$(this).children("option:selected").val();
+                window.location = '/user/info/'+user_id+'&'+selected_id;
+            })
+            if( $("#select-model").children("option").length == 0){
+                $("#up").attr("disabled","true");
+            }
+        })
+    </script>
+{% endblock %}
+{% block mainTitle %}个人中心{% endblock %}
+{% block breadcrumbs %}
+            <ol class="breadcrumb">
+                <li class="active">
+                    <strong>主页</strong>
+                </li>
+            </ol>
+{% endblock %}
+
+{% block mainContent %}
+{#    <div class="col-lg-4">#}
+    <div class="col col-md-6">
+    <div class="ibox">
+        <div class="ibox-title"><img alt="image" class="img-circle"
+                                     src="{{ url_for('static',filename='images/profile_small.png') }}">
+            你好，<strong>{{ current_user.user_name }}</strong>！
+        </div>
+        <div class="ibox-content" style="height: 199px;">
+            <div class="row">
+                </br>
+            </div>
+            <div class="row">
+                <div class="col col-md-3">
+                    邮&nbsp;&nbsp;&nbsp;&nbsp;箱：
+                </div>
+                <div class="col col-md-9">
+                <strong>{{ current_user.user_email }}</strong>
+                </div>
+            </div>
+        {% if current_user.user_role_type !='平台管理员' %}
+                {% if current_user.user_role_type=='公司管理员'or current_user.can(1, session['project_id']) %}
+                    <div class="row">
+                        <div class="col col-md-3">
+                            项目数：
+                        </div>
+                        <div class="col col-md-9">
+                        <strong><a href="{{ url_for("main.admin_project_list") }}">{{ proj_count }}</a></strong>
+                    </div>
+                    </div>
+                {% endif %}
+            {% if current_user.can(4, session['project_id']) or current_user.user_role_type=='公司管理员' %}
+                <div class="row">
+                    <div class="col col-md-3">
+                        模型数：
+                    </div>
+                    <div class="col col-md-9">
+                    <strong><a href="{{ url_for("main.admin_model_list") }}">{{ model_count }}</a></strong>
+                </div>
+                </div>
+            {% endif %}
+
+            {% else %}
+                <div class="row">
+                    <div class="col col-md-3">
+                        组织数：
+                    </div>
+                    <div class="col col-md-9">
+                    <strong><a href="{{ url_for("main.admin_organization_list") }}">{{ org_count }}</a></strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-md-3">
+                        用户数：
+                    </div>
+                    <div class="col col-md-9">
+                        <strong><a href="{{ url_for("main.admin_users_list") }}">{{ user_count }}</a></strong>
+                    </div>
+                </div>
+    {% endif %}
+    </div>
+    </div>
+    </div>
+{#    </div>#}
+    {% if current_user.user_role_type=='公司管理员'or current_user.can(1, session['project_id']) %}
+{#        <div class="col-lg-4">#}
+        <div class="col col-md-6">
+        <div class="ibox">
+            <div class="ibox ibox-title">
+                <div class="col col-md-6">我的项目</div>
+                <div class="col col-md-6" style="text-align: right">
+                    <a href="{{ url_for("main.admin_project_list") }}">查看详情>></a>
+                </div>
+            </div>
+
+            <div class="ibox ibox-content" style="overflow:hidden;min-height: 199px">
+                <table id="dataTable" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        {% block tableHead %}
+                            <th>项目名称</th>
+                            <th>片数</th>
+                            <th>状态</th>
+                        {% endblock %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in projects %}
+                        {% set itemLoop = loop %}
+                        <tr>
+                            <td>{{ item.project_name }}</td>
+                            <td><label class="label label-primary">{{ item.project_pieces }}</label></td>
+                            <td>{{ item.project_status }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+{#        </div>#}
+        {% endif %}
+    {#<div col-4>#}
+
+
+        {% if current_user.can(4, session['project_id']) or current_user.user_role_type=='公司管理员' %}
+            <div class="col col-md-6">
+{#            <div class="col col-md-12">#}
+                <div class="ibox ibox-title">
+                    <div class="col col-md-6">我的模型</div>
+                    <div class="col col-md-6" style="text-align: right">
+                        <a href="{{ url_for("main.admin_model_list") }}">
+                            查看详情>>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox ibox-content" style="overflow:hidden;min-height: 199px">
+                    <table id="dataTable" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>模型名称</th>
+                            <th>片数</th>
+                            <th>状态</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in models %}
+                            {% set itemLoop = loop %}
+                            <tr>
+                                <td>{{ item.model_name }}</td>
+                                <td><label class="label label-primary">{{ item.model_pieces }}</label></td>
+                                <td>{{ item.model_status }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+{#            </div>#}
+            </div>
+        {% endif %}
+    {% if current_user.user_role_type=='平台管理员' %}
+        <div class="col col-md-6">
+{#            <div class="col col-md-12">#}
+                <div class="ibox ibox-title">
+                    <div class="col col-md-6">组织列表</div>
+                    <div class="col col-md-6" >
+                        <a href="{{ url_for("main.admin_organization_list") }}">
+                            查看详情>>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox ibox-content" style="overflow:hidden;min-height: 199px">
+                    <table id="dataTable" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>用户名</th>
+                            <th>单位</th>
+                            <th>身份</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in organizations %}
+                            {% set itemLoop = loop %}
+                            <tr>
+                                <td>{{ item.user_name }}</td>
+                                <td>{{ item.user_company }}</td>
+                                <td>{{ item.user_role_type }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+{#            </div>#}
+        </div>
+    {% endif %}
+    {% if current_user.can(32, session['project_id']) or current_user.user_role_type=='公司管理员' %}
+        <div class="col col-md-6">
+{#        <div class="col col-md-12">#}
+            <div class="ibox">
+                <div class="ibox-title">
+                <span class="col col-sm-6">回测数据</span>
+                    <span  class="col col-sm-6" style="text-align: right">
+
+                    <a href="{{ url_for("main.admin_surveyed_data_list",user_id=session['user_id'],selected_id=1) }}">查看详情>></a>
+                    </span>
+                </div>
+                <div class="col ibox-content" style="overflow:hidden;min-height: 199px">
+                    <select id="select-model" class="selectpicker" style="width: 130px;" autocomplete="off">
+                        {% for item in models %}
+                            {% if item.model_id == model_id %}
+                                <option value="{{ item.model_id }}" selected='selected'>{{ item.model_name }}</option>
+                            {% else %}
+                                <option value="{{ item.model_id }}" >{{ item.model_name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <table id="dataTable" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                                <th>回测数据编号</th>
+                                <th>所属项目</th>
+                                <th>节段编号</th>
+                                <th>状态</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in surveyed_data %}
+                            <tr>
+                                <td>
+                                    <a href="{{ url_for('main.admin_surveyed_data_detail',surveyed_data_id=item.surveyed_data_id) }}">{{ item.surveyed_data_number }}</a>
+                                </td>
+                                <td>{{ item.project.project_name }}</td>
+                                <td>{{ item.segment.segment_number }}</td>
+                                <td style="text-align: center">
+                                    {% if item.surveyed_data_status == '待审核' %}
+                                        {% if current_user.user_role_type== '公司管理员' or current_user.can(32, session['project_id']) %}
+                                            <button id="{{ item.surveyed_data_id }}" class="btn verify-btn btn-warning">待审核</button>
+                                        {% else %}
+                                            <button id="{{ item.surveyed_data_id }}" class="btn verify-btn btn-warning" disabled="true">待审核</button>
+                                        {% endif %}
+                                    {% elif item.surveyed_data_status == '已修改' %}
+                                        <button id="{{ item.surveyed_data_id }}" class="btn verify-btn btn-default" disabled="true">已修改</button>
+                                    {% elif item.surveyed_data_status =="submit" %}
+                                        <button id="{{ item.surveyed_data_id }}" class="btn verify-btn btn-danger" disabled="true">不可用</button>
+                                    {% elif item.surveyed_data_status =="已审核" %}
+                                        <button id="{{ item.surveyed_data_id }}" class="btn verify-btn btn-primary" disabled="true">已审核</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+{#        </div>#}
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% macro render_node(nodes) %}
+            <div class="row">
+                <div class="col-sm-2">设置</div>
+                <div class="col-sm-4 col-sm-offset-6"><input id="nodeCamber" type="checkbox">包括预拱度</div>
+            </div>
+            <div class="row">
+                <table id="nodeExpect" class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>节点编号</th>
+                        <th>X-坐标系</th>
+                        <th>Y-坐标系</th>
+                        <th>Z-坐标系</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for node in nodes %}
+                        {% set itemLoop = loop %}
+                        <tr>
+                            <td>{{ node.node_number }}</td>
+                            <td>{{ eps_format % node.node_x_coord }}</td>
+                            <td>{{ eps_format % node.node_y_coord }}</td>
+                            <td>{{ eps_format % node.node_z_coord }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <table id="nodeActual" class="table table-bordered table-striped">
+                    <caption>浇筑后（测量值）</caption>
+                    <thead>
+                    <tr>
+                        <th>节点编号</th>
+                        <th>X-坐标系</th>
+                        <th>Y-坐标系</th>
+                        <th>Z-坐标系</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for node in nodes %}
+                        {% set itemLoop = loop %}
+                        <tr>
+                            <td>{{ node.node_number }}</td>
+                            <td>{{ eps_format % node.node_surveyed_x_coord }}</td>
+                            <td>{{ eps_format % node.node_surveyed_y_coord }}</td>
+                            <td>{{ eps_format % node.node_surveyed_z_coord }}</td>
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+
+
+            </div>
+            <div class="row">
+                <table class="table table-bordered table-striped">
+                    <caption>预拱度</caption>
+                    <thead>
+                    <tr>
+                        <th>节点编号</th>
+                        <th>X-坐标系</th>
+                        <th>Y-坐标系</th>
+                        <th>Z坐标系</th>
+                        <th>Phi X</th>
+                        <th>Phi Y</th>
+                        <th>Phi Z</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for node in nodes %}
+                        {% set itemLoop = loop %}
+                        <tr>
+                            <td>{{ node.node_number }}</td>
+                            <td>{{ eps_format % node.node_camber_x_coord }}</td>
+                            <td>{{ eps_format % node.node_camber_y_coord }}</td>
+                            <td>{{ eps_format % node.node_camber_z_coord }}</td>
+                            <td>{{ eps_format % node.node_camber_phi_x }}</td>
+                            <td>{{ eps_format % node.node_camber_phi_y }}</td>
+                            <td>{{ eps_format % node.node_camber_phi_z }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+{% endmacro %}

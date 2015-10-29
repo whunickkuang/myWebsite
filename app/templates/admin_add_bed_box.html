@@ -1,0 +1,50 @@
+{% extends "admin_edit_base.html" %}
+{% set activeMenu = "menu_bed_new" %}
+{% block mainTitle %}新增台座{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+        </li>
+        <li>
+            <a href="{{ url_for('main.admin_bed_list') }}">台座列表</a>
+        </li>
+            <li class="active">
+                <strong>新建</strong>
+            </li>
+    </ol>
+{% endblock %}
+{% block css %}
+{{ css_file("libs/plugins/datepicker/daterangepicker-bs3.css") }}
+{% endblock %}
+{% block otherjs %}
+{{ js_file("libs/plugins/datepicker/moment.js") }}
+{{ js_file("libs/plugins/datepicker/daterangepicker.js") }}
+              <script type="text/javascript">
+               $(document).ready(function() {
+                  $('#startTime').daterangepicker({ format: 'YYYY-MM-DD',singleDatePicker: true }, function(start, end, label) {
+                    console.log(start.toISOString(), end.toISOString(), label);
+                  });
+               });
+               </script>
+{% endblock %}
+{% block mainContent %}
+    <div class="wrapper wrapper-content">
+    <div class="ibox ibox-title">新建台座</div>
+        <div class="ibox ibox-content">
+    <form class="form-horizontal" method="post" action="{{ url_for("main.admin_bed_new") }}">
+        {{ form.hidden_tag() }}
+        {{ render_text(form.name) }}
+        {{ render_text(form.period) }}
+         <div class="form-group ">
+        <label class="col-sm-2 control-label" >起始时间</label>
+        <div class="col-sm-9"><input type="text" name="startTime" id="startTime" class="form-control" value="{{ date_now }}" />
+        </div>
+    </div>
+{#        {{ render_text(form.startTime) }}#}
+        {{ render_text(form.project) }}
+        {{ render_button("main.admin_bed_list") }}
+    </form>
+    </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "admin_edit_base.html" %}
+{% block mainTitle %}工程设置{% endblock %}
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+    <li>
+        <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+    </li>
+
+    <li class="active">
+        <strong>设置</strong>
+    </li>
+</ol>
+{% endblock %}
+{% block mainContent %}
+    <form class="form-horizontal" method="post"
+          action="{{ url_for('main.admin_add_setting') }}">
+    <div class="ibox ibox-title">工程设置</div>
+    <div class="ibox ibox-content">
+        {{ form.hidden_tag() }}
+        {{ render_text(form.range) }}
+        {{ render_button('main.individual_info_show') }}
+    </div>
+    </form>
+{% endblock %}

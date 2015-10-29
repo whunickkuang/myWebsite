@@ -1,0 +1,21 @@
+/**
+ * Created by paomer on 15/5/14.
+ */
+$(document).ready(function($){
+	$('#thetable1').tableScroll({
+		width:600,
+		height:134
+	});
+});
+$(document).ready(function($){
+    $('#thetable2').tableScroll({
+        width:500,
+        height:134
+    });
+});
+$(document).ready(function($){
+    $('#thetable3').tableScroll({
+        width:400,
+        height:134
+    });
+});

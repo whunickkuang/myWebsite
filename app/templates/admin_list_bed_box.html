@@ -1,0 +1,36 @@
+{% extends "admin_list_base.html" %}
+{% from "html_utils.html" import table_select %}
+{% set activeMenu = "menu_bed_list" %}
+{% block mainTitle %}台座管理{% endblock %}
+{% block breadcrumbs %}
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+                </li>
+                {% if items is not none and current_user.user_role_type!='公司管理员' %}
+                <li>
+                    <a href="{{ url_for('main.admin_edit_project',projectId=project.project_id) }}">{{project.project_name }}</a>
+                </li>
+                {% endif %}
+                <li class="active">
+                    <strong>台座列表</strong>
+                </li>
+            </ol>
+{% endblock %}
+{% block iboxtitle %}
+台座列表
+{% endblock %}
+{% block tableHead %}
+    {{ table_select("all") }}
+    <th>台座名称</th>
+    <th>默认周期</th>
+    <th>起始时间</th>
+    <th>所属项目</th>
+{% endblock %}
+{% block tableRow %}
+    {{ table_select(item.bed_id) }}
+    <td><a href="{{ url_for('main.admin_bed_detail',bed_id=item.bed_id) }}">{{ item.bed_name }}</a></td>
+    <td>{{ item.bed_default_period }}</td>
+    <td>{{ item.bed_startTime }}</td>
+    <td>{{ item.project.project_name }}</td>
+{% endblock %}

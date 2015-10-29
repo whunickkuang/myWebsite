@@ -1,0 +1,246 @@
+{% extends "admin_edit_base.html" %}
+{% set activeMenu = "menu_model_management" %}
+{% block mainTitle %}节段浇筑{% endblock %}
+
+{% block css %}
+    {{ css_file("css/chart.css") }}
+    {{ css_file("libs/plugins/dataTables/dataTables.bootstrap.css") }}
+    {{ css_file("libs/plugins/jqueryStep/jquery.steps.css") }}
+{% endblock %}
+{% block otherjs %}
+    {{ js_file("libs/plugins/dataTables/jquery.dataTables.min.js") }}
+    {{ js_file("libs/plugins/dataTables/dataTables.bootstrap.js") }}
+    {{ js_file("js/drawImage.js") }}
+    {{ js_file("libs/plugins/jqueryStep/jquery.steps.js") }}
+    {{ js_file("js/modelDetail.js") }}
+<script type=text/javascript>
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+    <script type=text/javascript>
+        $(document).ready(function () {
+            $("#wizard").steps({
+                headerTag: "h3",
+                saveState: true,
+                bodyTag: "section",
+                enableCancelButton: false,
+                enableFinishButton: true,
+                showFinishButtonAlways: false,
+                labels: {
+                    cancel: "取消",
+                    current: "current step:",
+                    pagination: "Pagination",
+                    finish: "完成",
+                    next: "下一步",
+                    previous: "返回",
+                    loading: "Loading ..."
+                },
+                onStepChanging: function (event, currentIndex, newIndex) {
+
+                    if (currentIndex == 1 && newIndex == 2) {
+                        var is_simply;
+                        $("#simplyThird").click(function () {
+                            is_simply = $("#simplyThird").prop("checked");
+                            drawThirdStep(is_simply);
+                        });
+                        function drawThirdStep(is_simply) {
+
+                                    $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_segment_process_json',segment_id=segment_show.segment_id) }}', {}, function (data) {
+
+                                        var order = data.order_data;
+                                        var survey_data = data.survey_data;
+                                        var match_number_json = data.last_segment_number;
+                                        var match_number = match_number_json['last_segment_number'];
+                                        var segment_number = order['segment_number'];
+                                        if (match_number == 0) {
+                                            var canvas = document.getElementById("mcThirdStep");
+                                            var ic = canvas.getContext("2d");
+                                            drawProcessAllOrder(order, survey_data, ic, 3, true, is_simply);
+                                        }
+                                        else {
+                                            canvas = document.getElementById("mcThirdStep");
+                                            ic = canvas.getContext("2d");
+                                            drawProcessAllOrder(order, survey_data, ic, 3, false, is_simply);
+                                        }
+                                    });
+
+
+                        }
+
+                        is_simply = $("#simplyThird").prop("checked");
+                        drawThirdStep(is_simply);
+                    }
+                    return true;
+                },
+                onStepChanged: function (event, currentIndex, priorIndex) {
+                    if (currentIndex == 3) {
+                        window.location = "{{ url_for('main.admin_detail_model',model_id=segment_show.seg_model.model_id) }}";
+
+                    }
+                    if (currentIndex == 1) {
+                        var is_simply;
+                        $("#simplySecond").click(function () {
+                            is_simply = $("#simplySecond").prop("checked");
+                            DrawSecondStep(is_simply);
+                        });
+                        is_simply = $("#simplySecond").prop("checked");
+
+                        function DrawSecondStep(is_simply) {
+
+                            $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_segment_process_json',segment_id=segment_show.segment_id)  }}', {}, function (data) {
+
+                                var order2 = data.order_data;
+                                var survey_data = data.survey_data;
+                                var match_number_json = data.last_segment_number;
+                                var match_number = match_number_json['last_segment_number'];
+                                var segment_number = order2['segment_number'];
+                                if (match_number == 0) {
+                                    var canvas = document.getElementById("mcSecondStep");
+                                    var ic = canvas.getContext("2d");
+                                    drawProcessAllOrder(order2, survey_data, ic, 2, true, is_simply);
+                                }
+                                else {
+                                    canvas = document.getElementById("mcSecondStep");
+                                    ic = canvas.getContext("2d");
+                                    drawProcessAllOrder(order2, survey_data, ic, 2, false, is_simply);
+                                }
+
+                            });
+
+                        }
+
+                        DrawSecondStep(is_simply);
+
+                    }
+
+                },
+                onFinishing: function (event, currentIndex) {
+
+                    return true;
+                },
+                onFinished: function (event, currentIndex) {
+
+                }
+            });
+
+            var is_simply;
+            $("#simplyFirst").click(function () {
+                is_simply = $("#simplyFirst").prop("checked");
+                drawFirstStep(is_simply);
+            });
+            is_simply = $("#simplyFirst").prop("checked");
+            drawFirstStep(is_simply);
+            function drawFirstStep(is_simply) {
+                $.getJSON($SCRIPT_ROOT + '{{ url_for('main.admin_detail_segment_process_json',segment_id=segment_show.segment_id)  }}', {}, function (data) {
+
+                    var order = data.order_data;
+
+                    {#                        判断模型是否浇筑完成#}
+                    var status = data.status;
+                    var survey_data = data.survey_data;
+                        var match_number_json = data.last_segment_number;
+                        var match_number = match_number_json['last_segment_number'];
+                        var segment_number = order['segment_number'];
+                        if (match_number == 0) {
+                            $(".processNumberShow").text("");
+                            $(".processNumberShow").text("本节段为初始浇筑节段,   当前正在浇筑节段");
+                            $(".processNumberShowSegment").text(segment_number);
+                            var canvas = document.getElementById("mcFirstStep");
+                            var ic = canvas.getContext("2d");
+
+                            drawProcessAllOrder(order, survey_data, ic, 1, true, is_simply);
+                        }
+                        else {
+                            $(".processNumberShow").text("");
+                            $(".processNumberShow").text("设置匹配浇筑节段"+match_number+",当前正在浇筑节段");
+                            $(".processNumberShowSegment").text(segment_number);
+                            canvas = document.getElementById("mcFirstStep");
+                            ic = canvas.getContext("2d");
+                            drawProcessAllOrder(order, survey_data, ic, 1, false, is_simply);
+                        }
+                });
+            }
+
+        });
+    </script>
+{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+        </li>
+        <li>
+            <a href="{{ url_for('main.admin_edit_project',projectId=segment_show.seg_model.project.project_id) }}">{{ segment_show.seg_model.project.project_name }}</a>
+        </li>
+        <li>
+            <a href="{{ url_for('main.admin_detail_model',model_id=segment_show.seg_model.model_id) }}">{{ segment_show.seg_model.model_name }}</a>
+        </li>
+        <li class="active">
+            <strong>{{ segment_show.segment_number }}</strong>
+        </li>
+
+    </ol>
+{% endblock %}
+{% block mainContent %}
+    <div class="col col-md-12">
+            <div id="wizard" class="wizard-big">
+              <h3>设置匹配-浇筑</h3>
+
+                <section>
+{#                   <div class="col-sm-12"><div id="" class="col-sm-4 processNumberShow"></div> <div class="col-sm-2 col-sm-offset-6"><input id="simplyFirst" class="simply" type="checkbox">简化架构</div> </div>#}
+                    <div class="col-sm-12">
+                       <div class="col-sm-8">
+                           <div id="" class="processNumberShow"></div>
+                           <div class="processNumberShowSegment"></div>
+                       </div>
+                       <div class="col-sm-4" style="text-align: right; top: 4px;"><input id="simplyFirst" class="simply" type="checkbox">简化架构
+                       </div>
+                   </div>
+                    <canvas id="mcFirstStep" width="1000" height="600" style="background:#ffffff;padding:0px;border:0px #000000 solid"></canvas>
+
+                </section>
+                <h3>设置测量钉</h3>
+
+                <section class="step-content">
+{#                    <div class="col-sm-12"><div id="" class="col-sm-4 processNumberShow"></div> <div class="col-sm-2 col-sm-offset-6"><input id="simplySecond" type="checkbox">简化架构</div> </div>#}
+                    <div class="col-sm-12">
+                       <div class="col-sm-8">
+                           <div id="" class="processNumberShow"></div>
+                           <div class="processNumberShowSegment"></div>
+                       </div>
+                       <div class="col-sm-4" style="text-align: right; top: 4px;"><input id="simplySecond" type="checkbox">简化架构
+                       </div>
+                   </div>
+                    <canvas id="mcSecondStep" width="1000" height="600" style="background:#ffffff;padding:0px;border:0px #000000 solid"></canvas>
+                </section>
+
+                <h3>导入测量值</h3>
+
+                <section class="step-content">
+{#                   <div class="col-sm-12"><div id="" class="col-sm-4 processNumberShow"></div> <div class="col-sm-2 col-sm-offset-6"><input id="simplyThird" type="checkbox">简化架构</div> </div>#}
+                    <div class="col-sm-12">
+                       <div class="col-sm-8">
+                           <div id="" class="processNumberShow"></div>
+                           <div class="processNumberShowSegment"></div>
+                       </div>
+                       <div class="col-sm-4" style="text-align: right; top: 4px;"><input id="simplyThird" type="checkbox">简化架构
+                       </div>
+                   </div>
+                    <canvas id="mcThirdStep" width="1000" height="600" style="background:#ffffff;padding:0px;border:0px #000000 solid"></canvas>
+
+                </section>
+
+
+                <h3>完成</h3>
+
+                <section>
+                    <div class="text-center m-t-md">
+                        <h2>完成</h2>
+
+                        <p>
+                            This is last content.
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </div>
+{% endblock %}

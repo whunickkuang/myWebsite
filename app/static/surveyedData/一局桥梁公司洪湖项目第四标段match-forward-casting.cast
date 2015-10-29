@@ -1,0 +1,427 @@
+RMTOOLS    08.11.18.01
+RMCAST     1
+PROJECT    Unknown
+BRIDGE     Unknown
+DATE       14 11 2014
+LSTCHNG    3 2 2015
+
+UNIT                   MG No description available
+
+UNCELL              CELL1           0.25              0
+
+UNRIVET              GP-C             co
+UNRIVET              GP-R             el
+UNRIVET              GP-L             el
+UNRIVET              GP-D              b
+
+NODECAMB              101             -0         3e-005             -0               -0               -0         -0.00045
+NODECAMB              102   -0.001775971    0.006948798             -0               -0               -0  -0.004001941748
+NODECAMB              103   -0.003198058    0.023436415             -0               -0               -0  -0.006846116505
+NODECAMB              104   -0.004305583     0.04748751             -0               -0               -0  -0.009061165049
+NODECAMB              105   -0.005137864    0.077332667             -0               -0               -0  -0.010725728155
+NODECAMB              106   -0.005734223    0.111438389             -0               -0               -0  -0.011918446602
+NODECAMB              107   -0.006133981    0.148507105             -0               -0               -0  -0.012717961165
+NODECAMB              108   -0.006376456    0.187477163             -0               -0               -0  -0.013202912621
+NODECAMB              109   -0.006500971    0.227522835             -0               -0               -0  -0.013451941748
+NODECAMB              110   -0.006546845    0.268054316             -0               -0               -0   -0.01354368932
+NODECAMB              111   -0.006553398    0.308717723             -0               -0               -0  -0.013556796117
+
+NODE                  101              0              0              0
+NODE                  102              0              0              0
+NODE                  103              0              0              0
+NODE                  104              0              0              0
+NODE                  105              0              0              0
+NODE                  106              0              0              0
+NODE                  107              0              0              0
+NODE                  108              0              0              0
+NODE                  109              0              0              0
+NODE                  110              0              0              0
+NODE                  111              0              0              0
+
+NODEERE               101              0         3e-005              0
+NODEERE               102     2.99819604  0.00692855983 1.66431498e-015
+NODEERE               103     5.99685111   0.0233405776 2.38007972e-012
+NODEERE               104     8.99569442     0.04748751 -2.16112716e-016
+NODEERE               105     11.9948621    0.077332667              0
+NODEERE               106     14.9942658    0.111438389              0
+NODEERE               107      17.993866    0.148507105              0
+NODEERE               108     20.9936235    0.187477163              0
+NODEERE               109      23.993499    0.227522835              0
+NODEERE               110     26.9934532    0.268054316              0
+NODEERE               111     29.9934466    0.308717723              0
+
+SEGNODE               101            101            102
+SEGNODE               102            102            103
+SEGNODE               103            103            104
+SEGNODE               104            104            105
+SEGNODE               105            105            106
+SEGNODE               106            106            107
+SEGNODE               107            107            108
+SEGNODE               108            108            109
+SEGNODE               109            109            110
+SEGNODE               110            110            111
+
+SEGPLANE              101              1              0              0              1              0              0
+SEGPLANE              102              1              0              0              1              0              0
+SEGPLANE              103              1              0              0              1              0              0
+SEGPLANE              104              1              0              0              1              0              0
+SEGPLANE              105              1              0              0              1              0              0
+SEGPLANE              106              1              0              0              1              0              0
+SEGPLANE              107              1              0              0              1              0              0
+SEGPLANE              108              1              0              0              1              0              0
+SEGPLANE              109              1              0              0              1              0              0
+SEGPLANE              110              1              0              0              1              0              0
+
+SEGCROSS              101            SEC              0              0              0          ATBEG
+SEGCROSS              101            SEC              0              0              0          ATEND
+SEGCROSS              102            SEC              0              0              0          ATBEG
+SEGCROSS              102            SEC              0              0              0          ATEND
+SEGCROSS              103            SEC              0              0              0          ATBEG
+SEGCROSS              103            SEC              0              0              0          ATEND
+SEGCROSS              104            SEC              0              0              0          ATBEG
+SEGCROSS              104            SEC              0              0              0          ATEND
+SEGCROSS              105            SEC              0              0              0          ATBEG
+SEGCROSS              105            SEC              0              0              0          ATEND
+SEGCROSS              106            SEC              0              0              0          ATBEG
+SEGCROSS              106            SEC              0              0              0          ATEND
+SEGCROSS              107            SEC              0              0              0          ATBEG
+SEGCROSS              107            SEC              0              0              0          ATEND
+SEGCROSS              108            SEC              0              0              0          ATBEG
+SEGCROSS              108            SEC              0              0              0          ATEND
+SEGCROSS              109            SEC              0              0              0          ATBEG
+SEGCROSS              109            SEC              0              0              0          ATEND
+SEGCROSS              110            SEC              0              0              0          ATBEG
+SEGCROSS              110            SEC              0              0              0          ATEND
+
+SEGMATCH              101           NONE          ATBEG
+SEGMATCH              102            101          ATBEG
+SEGMATCH              103            102          ATBEG
+SEGMATCH              104            103          ATBEG
+SEGMATCH              105            104          ATBEG
+SEGMATCH              106            105          ATBEG
+SEGMATCH              107            106          ATBEG
+SEGMATCH              108            107          ATBEG
+SEGMATCH              109            108          ATBEG
+SEGMATCH              110            109          ATBEG
+
+SEGCAST               101       CASTDONE 3 2 2015
+SEGCAST               102       CASTDONE 3 2 2015
+
+SEGRIVET              101           GP-C              0              0              0          ATBEG
+SEGRIVET              101           GP-C              3              0              0          ATEND
+SEGRIVET              102           GP-C              3              0              0          ATBEG
+SEGRIVET              102           GP-C              6              0              0          ATEND
+SEGRIVET              103           GP-C              6              0              0          ATBEG
+SEGRIVET              103           GP-C              9              0              0          ATEND
+SEGRIVET              104           GP-C              9              0              0          ATBEG
+SEGRIVET              104           GP-C             12              0              0          ATEND
+SEGRIVET              105           GP-C             12              0              0          ATBEG
+SEGRIVET              105           GP-C             15              0              0          ATEND
+SEGRIVET              106           GP-C             15              0              0          ATBEG
+SEGRIVET              106           GP-C             18              0              0          ATEND
+SEGRIVET              107           GP-C             18              0              0          ATBEG
+SEGRIVET              107           GP-C             21              0              0          ATEND
+SEGRIVET              108           GP-C             21              0              0          ATBEG
+SEGRIVET              108           GP-C             24              0              0          ATEND
+SEGRIVET              109           GP-C             24              0              0          ATBEG
+SEGRIVET              109           GP-C             27              0              0          ATEND
+SEGRIVET              110           GP-C             27              0              0          ATBEG
+SEGRIVET              110           GP-C             30              0              0          ATEND
+
+SEGRIVET              101           GP-R              0              0           -0.8          ATBEG
+SEGRIVET              101           GP-R              3              0           -0.8          ATEND
+SEGRIVET              102           GP-R              3              0           -0.8          ATBEG
+SEGRIVET              102           GP-R              6              0           -0.8          ATEND
+SEGRIVET              103           GP-R              6              0           -0.8          ATBEG
+SEGRIVET              103           GP-R              9              0           -0.8          ATEND
+SEGRIVET              104           GP-R              9              0           -0.8          ATBEG
+SEGRIVET              104           GP-R             12              0           -0.8          ATEND
+SEGRIVET              105           GP-R             12              0           -0.8          ATBEG
+SEGRIVET              105           GP-R             15              0           -0.8          ATEND
+SEGRIVET              106           GP-R             15              0           -0.8          ATBEG
+SEGRIVET              106           GP-R             18              0           -0.8          ATEND
+SEGRIVET              107           GP-R             18              0           -0.8          ATBEG
+SEGRIVET              107           GP-R             21              0           -0.8          ATEND
+SEGRIVET              108           GP-R             21              0           -0.8          ATBEG
+SEGRIVET              108           GP-R             24              0           -0.8          ATEND
+SEGRIVET              109           GP-R             24              0           -0.8          ATBEG
+SEGRIVET              109           GP-R             27              0           -0.8          ATEND
+SEGRIVET              110           GP-R             27              0           -0.8          ATBEG
+SEGRIVET              110           GP-R             30              0           -0.8          ATEND
+
+SEGRIVET              101           GP-L              0              0            0.8          ATBEG
+SEGRIVET              101           GP-L              3              0            0.8          ATEND
+SEGRIVET              102           GP-L              3              0            0.8          ATBEG
+SEGRIVET              102           GP-L              6              0            0.8          ATEND
+SEGRIVET              103           GP-L              6              0            0.8          ATBEG
+SEGRIVET              103           GP-L              9              0            0.8          ATEND
+SEGRIVET              104           GP-L              9              0            0.8          ATBEG
+SEGRIVET              104           GP-L             12              0            0.8          ATEND
+SEGRIVET              105           GP-L             12              0            0.8          ATBEG
+SEGRIVET              105           GP-L             15              0            0.8          ATEND
+SEGRIVET              106           GP-L             15              0            0.8          ATBEG
+SEGRIVET              106           GP-L             18              0            0.8          ATEND
+SEGRIVET              107           GP-L             18              0            0.8          ATBEG
+SEGRIVET              107           GP-L             21              0            0.8          ATEND
+SEGRIVET              108           GP-L             21              0            0.8          ATBEG
+SEGRIVET              108           GP-L             24              0            0.8          ATEND
+SEGRIVET              109           GP-L             24              0            0.8          ATBEG
+SEGRIVET              109           GP-L             27              0            0.8          ATEND
+SEGRIVET              110           GP-L             27              0            0.8          ATBEG
+SEGRIVET              110           GP-L             30              0            0.8          ATEND
+
+SEGRIVET              101           GP-D              0             -1             -0          ATBEG
+SEGRIVET              101           GP-D              3             -1             -0          ATEND
+SEGRIVET              102           GP-D              3             -1             -0          ATBEG
+SEGRIVET              102           GP-D              6             -1             -0          ATEND
+SEGRIVET              103           GP-D              6             -1             -0          ATBEG
+SEGRIVET              103           GP-D              9             -1             -0          ATEND
+SEGRIVET              104           GP-D              9             -1             -0          ATBEG
+SEGRIVET              104           GP-D             12             -1             -0          ATEND
+SEGRIVET              105           GP-D             12             -1             -0          ATBEG
+SEGRIVET              105           GP-D             15             -1             -0          ATEND
+SEGRIVET              106           GP-D             15             -1             -0          ATBEG
+SEGRIVET              106           GP-D             18             -1             -0          ATEND
+SEGRIVET              107           GP-D             18             -1             -0          ATBEG
+SEGRIVET              107           GP-D             21             -1             -0          ATEND
+SEGRIVET              108           GP-D             21             -1             -0          ATBEG
+SEGRIVET              108           GP-D             24             -1             -0          ATEND
+SEGRIVET              109           GP-D             24             -1             -0          ATBEG
+SEGRIVET              109           GP-D             27             -1             -0          ATEND
+SEGRIVET              110           GP-D             27             -1             -0          ATBEG
+SEGRIVET              110           GP-D             30             -1             -0          ATEND
+
+SEGRIVERE             101           GP-C              0         3e-005              0          ATBEG
+SEGRIVERE             101           GP-C     2.99819604  0.00692855983 1.66431498e-015          ATEND
+SEGRIVERE             102           GP-C     2.99819604  0.00692855983 1.66431498e-015          ATBEG
+SEGRIVERE             102           GP-C     5.99685111   0.0233405776 2.38007972e-012          ATEND
+SEGRIVERE             103           GP-C     5.99685111   0.0233405776 2.38007972e-012          ATBEG
+SEGRIVERE             103           GP-C     8.99569442     0.04748751 -2.16112716e-016          ATEND
+SEGRIVERE             104           GP-C     8.99569442     0.04748751              0          ATBEG
+SEGRIVERE             104           GP-C     11.9948621    0.077332667              0          ATEND
+SEGRIVERE             105           GP-C     11.9948621    0.077332667              0          ATBEG
+SEGRIVERE             105           GP-C     14.9942658    0.111438389              0          ATEND
+SEGRIVERE             106           GP-C     14.9942658    0.111438389              0          ATBEG
+SEGRIVERE             106           GP-C      17.993866    0.148507105              0          ATEND
+SEGRIVERE             107           GP-C      17.993866    0.148507105              0          ATBEG
+SEGRIVERE             107           GP-C     20.9936235    0.187477163              0          ATEND
+SEGRIVERE             108           GP-C     20.9936235    0.187477163              0          ATBEG
+SEGRIVERE             108           GP-C      23.993499    0.227522835              0          ATEND
+SEGRIVERE             109           GP-C      23.993499    0.227522835              0          ATBEG
+SEGRIVERE             109           GP-C     26.9934532    0.268054316              0          ATEND
+SEGRIVERE             110           GP-C     26.9934532    0.268054316              0          ATBEG
+SEGRIVERE             110           GP-C     29.9934466    0.308717723              0          ATEND
+
+SEGRIVERE             101           GP-R -1.28273151e-020         3e-005           -0.8          ATBEG
+SEGRIVERE             101           GP-R     2.99819604  0.00692855983           -0.8          ATEND
+SEGRIVERE             102           GP-R     2.99819604  0.00692855983           -0.8          ATBEG
+SEGRIVERE             102           GP-R     5.99685111   0.0233405781           -0.8          ATEND
+SEGRIVERE             103           GP-R     5.99685111   0.0233405781           -0.8          ATBEG
+SEGRIVERE             103           GP-R     8.99569442     0.04748751           -0.8          ATEND
+SEGRIVERE             104           GP-R     8.99569442     0.04748751           -0.8          ATBEG
+SEGRIVERE             104           GP-R     11.9948621    0.077332667           -0.8          ATEND
+SEGRIVERE             105           GP-R     11.9948621    0.077332667           -0.8          ATBEG
+SEGRIVERE             105           GP-R     14.9942658    0.111438389           -0.8          ATEND
+SEGRIVERE             106           GP-R     14.9942658    0.111438389           -0.8          ATBEG
+SEGRIVERE             106           GP-R      17.993866    0.148507105           -0.8          ATEND
+SEGRIVERE             107           GP-R      17.993866    0.148507105           -0.8          ATBEG
+SEGRIVERE             107           GP-R     20.9936235    0.187477163           -0.8          ATEND
+SEGRIVERE             108           GP-R     20.9936235    0.187477163           -0.8          ATBEG
+SEGRIVERE             108           GP-R      23.993499    0.227522835           -0.8          ATEND
+SEGRIVERE             109           GP-R      23.993499    0.227522835           -0.8          ATBEG
+SEGRIVERE             109           GP-R     26.9934532    0.268054316           -0.8          ATEND
+SEGRIVERE             110           GP-R     26.9934532    0.268054316           -0.8          ATBEG
+SEGRIVERE             110           GP-R     29.9934466    0.308717723           -0.8          ATEND
+
+SEGRIVERE             101           GP-L 1.28273151e-020         3e-005            0.8          ATBEG
+SEGRIVERE             101           GP-L     2.99819604  0.00692855983            0.8          ATEND
+SEGRIVERE             102           GP-L     2.99819604  0.00692855983            0.8          ATBEG
+SEGRIVERE             102           GP-L     5.99685111   0.0233405772            0.8          ATEND
+SEGRIVERE             103           GP-L     5.99685111   0.0233405772            0.8          ATBEG
+SEGRIVERE             103           GP-L     8.99569442     0.04748751            0.8          ATEND
+SEGRIVERE             104           GP-L     8.99569442     0.04748751            0.8          ATBEG
+SEGRIVERE             104           GP-L     11.9948621    0.077332667            0.8          ATEND
+SEGRIVERE             105           GP-L     11.9948621    0.077332667            0.8          ATBEG
+SEGRIVERE             105           GP-L     14.9942658    0.111438389            0.8          ATEND
+SEGRIVERE             106           GP-L     14.9942658    0.111438389            0.8          ATBEG
+SEGRIVERE             106           GP-L      17.993866    0.148507105            0.8          ATEND
+SEGRIVERE             107           GP-L      17.993866    0.148507105            0.8          ATBEG
+SEGRIVERE             107           GP-L     20.9936235    0.187477163            0.8          ATEND
+SEGRIVERE             108           GP-L     20.9936235    0.187477163            0.8          ATBEG
+SEGRIVERE             108           GP-L      23.993499    0.227522835            0.8          ATEND
+SEGRIVERE             109           GP-L      23.993499    0.227522835            0.8          ATBEG
+SEGRIVERE             109           GP-L     26.9934532    0.268054316            0.8          ATEND
+SEGRIVERE             110           GP-L     26.9934532    0.268054316            0.8          ATBEG
+SEGRIVERE             110           GP-L     29.9934466    0.308717723            0.8          ATEND
+
+SEGRIVERE             101           GP-D        0.00045       -0.99997              0          ATBEG
+SEGRIVERE             101           GP-D     3.00219798    -0.99307144 1.66219964e-015          ATEND
+SEGRIVERE             102           GP-D     3.00219798    -0.99307144 1.66219964e-015          ATBEG
+SEGRIVERE             102           GP-D      6.0023342   -0.976667825 -5.93890853e-010          ATEND
+SEGRIVERE             103           GP-D      6.0023342   -0.976667825 -5.93890853e-010          ATBEG
+SEGRIVERE             103           GP-D     9.00374657   -0.952521124 5.84126265e-016          ATEND
+SEGRIVERE             104           GP-D     9.00475558    -0.95251249             -0          ATBEG
+SEGRIVERE             104           GP-D     12.0055879   -0.922667333             -0          ATEND
+SEGRIVERE             105           GP-D     12.0055879   -0.922667333             -0          ATBEG
+SEGRIVERE             105           GP-D     15.0061842   -0.888561611             -0          ATEND
+SEGRIVERE             106           GP-D     15.0061842   -0.888561611             -0          ATBEG
+SEGRIVERE             106           GP-D      18.006584   -0.851492895             -0          ATEND
+SEGRIVERE             107           GP-D      18.006584   -0.851492895             -0          ATBEG
+SEGRIVERE             107           GP-D     21.0068265   -0.812522837             -0          ATEND
+SEGRIVERE             108           GP-D     21.0068265   -0.812522837             -0          ATBEG
+SEGRIVERE             108           GP-D      24.006951   -0.772477165             -0          ATEND
+SEGRIVERE             109           GP-D      24.006951   -0.772477165             -0          ATBEG
+SEGRIVERE             109           GP-D     27.0069968   -0.731945684             -0          ATEND
+SEGRIVERE             110           GP-D     27.0069968   -0.731945684             -0          ATBEG
+SEGRIVERE             110           GP-D     30.0070034   -0.691282277             -0          ATEND
+
+SEGRRIVERE            101           GP-C    0.249999334 0.000606906488 1.38776002e-016          ATBEG
+SEGRRIVERE            101           GP-C      2.7481967  0.00635165334 1.52553898e-015          ATEND
+SEGRRIVERE            102           GP-C     3.24819224  0.00830483304 -2.6743577e-014          ATBEG
+SEGRRIVERE            102           GP-C     5.74685487   0.0219698377 2.15926154e-012          ATEND
+SEGRRIVERE            103           GP-C     6.24684301   0.0253535329 2.18165166e-012          ATBEG
+SEGRRIVERE            103           GP-C     8.74570252   0.0454745547 1.9821195e-013          ATEND
+SEGRRIVERE            104           GP-C     9.24568204   0.0499751734              0          ATBEG
+SEGRRIVERE            104           GP-C     11.7448745   0.0748450036              0          ATEND
+SEGRRIVERE            105           GP-C      12.244846   0.0801751918              0          ATBEG
+SEGRRIVERE            105           GP-C     14.7442819    0.108595864              0          ATEND
+SEGRRIVERE            106           GP-C     15.2442467    0.114527624              0          ATBEG
+SEGRRIVERE            106           GP-C     17.7438851     0.14541787              0          ATEND
+SEGRRIVERE            107           GP-C     18.2438449    0.151754598              0          ATBEG
+SEGRRIVERE            107           GP-C     20.7436446     0.18422967              0          ATEND
+SEGRRIVERE            108           GP-C     21.2436013    0.190814144              0          ATBEG
+SEGRRIVERE            108           GP-C     23.7435213    0.224185854              0          ATEND
+SEGRRIVERE            109           GP-C     24.2434762    0.230900202              0          ATBEG
+SEGRRIVERE            109           GP-C      26.743476    0.264676949              0          ATEND
+SEGRRIVERE            110           GP-C     27.2434302    0.271442629              0          ATBEG
+SEGRRIVERE            110           GP-C     29.7434696     0.30532941              0          ATEND
+
+SEGRRIVERE            101           GP-R     0.24999924 0.000630478754           -0.8          ATBEG
+SEGRRIVERE            101           GP-R      2.7481968  0.00632808105           -0.8          ATEND
+SEGRRIVERE            102           GP-R     3.24819245  0.00826956674           -0.8          ATBEG
+SEGRRIVERE            102           GP-R     5.74685487   0.0219698382           -0.8          ATEND
+SEGRRIVERE            103           GP-R     6.24684301   0.0253535333           -0.8          ATBEG
+SEGRRIVERE            103           GP-R     8.74570252   0.0454745548           -0.8          ATEND
+SEGRRIVERE            104           GP-R     9.24568204   0.0499751734           -0.8          ATBEG
+SEGRRIVERE            104           GP-R     11.7448745   0.0748450036           -0.8          ATEND
+SEGRRIVERE            105           GP-R      12.244846   0.0801751918           -0.8          ATBEG
+SEGRRIVERE            105           GP-R     14.7442819    0.108595864           -0.8          ATEND
+SEGRRIVERE            106           GP-R     15.2442467    0.114527624           -0.8          ATBEG
+SEGRRIVERE            106           GP-R     17.7438851     0.14541787           -0.8          ATEND
+SEGRRIVERE            107           GP-R     18.2438449    0.151754598           -0.8          ATBEG
+SEGRRIVERE            107           GP-R     20.7436446     0.18422967           -0.8          ATEND
+SEGRRIVERE            108           GP-R     21.2436013    0.190814144           -0.8          ATBEG
+SEGRRIVERE            108           GP-R     23.7435213    0.224185854           -0.8          ATEND
+SEGRRIVERE            109           GP-R     24.2434762    0.230900202           -0.8          ATBEG
+SEGRRIVERE            109           GP-R      26.743476    0.264676949           -0.8          ATEND
+SEGRRIVERE            110           GP-R     27.2434302    0.271442629           -0.8          ATBEG
+SEGRRIVERE            110           GP-R     29.7434696     0.30532941           -0.8          ATEND
+
+SEGRRIVERE            101           GP-L     0.24999924 0.000630478754            0.8          ATBEG
+SEGRRIVERE            101           GP-L      2.7481968  0.00632808105            0.8          ATEND
+SEGRRIVERE            102           GP-L     3.24819245  0.00826956579            0.8          ATBEG
+SEGRRIVERE            102           GP-L     5.74685487   0.0219698372            0.8          ATEND
+SEGRRIVERE            103           GP-L     6.24684301   0.0253535325            0.8          ATBEG
+SEGRRIVERE            103           GP-L     8.74570252   0.0454745547            0.8          ATEND
+SEGRRIVERE            104           GP-L     9.24568204   0.0499751734            0.8          ATBEG
+SEGRRIVERE            104           GP-L     11.7448745   0.0748450036            0.8          ATEND
+SEGRRIVERE            105           GP-L      12.244846   0.0801751918            0.8          ATBEG
+SEGRRIVERE            105           GP-L     14.7442819    0.108595864            0.8          ATEND
+SEGRRIVERE            106           GP-L     15.2442467    0.114527624            0.8          ATBEG
+SEGRRIVERE            106           GP-L     17.7438851     0.14541787            0.8          ATEND
+SEGRRIVERE            107           GP-L     18.2438449    0.151754598            0.8          ATBEG
+SEGRRIVERE            107           GP-L     20.7436446     0.18422967            0.8          ATEND
+SEGRRIVERE            108           GP-L     21.2436013    0.190814144            0.8          ATBEG
+SEGRRIVERE            108           GP-L     23.7435213    0.224185854            0.8          ATEND
+SEGRRIVERE            109           GP-L     24.2434762    0.230900202            0.8          ATBEG
+SEGRRIVERE            109           GP-L      26.743476    0.264676949            0.8          ATEND
+SEGRRIVERE            110           GP-L     27.2434302    0.271442629            0.8          ATBEG
+SEGRRIVERE            110           GP-L     29.7434696     0.30532941            0.8          ATEND
+
+SEGRRIVERE            101           GP-D    0.250449336   -0.999393776 -4.00852947e-021          ATBEG
+SEGRRIVERE            101           GP-D     2.75219864   -0.993647664 1.52342364e-015          ATEND
+SEGRRIVERE            102           GP-D      3.2521942   -0.991696546 1.36426324e-015          ATBEG
+SEGRRIVERE            102           GP-D     5.75233795   -0.978037185 -5.94110957e-010          ATEND
+SEGRRIVERE            103           GP-D     6.25232611   -0.974656612 -5.4442479e-010          ATBEG
+SEGRRIVERE            103           GP-D     8.75375466   -0.954532337 -4.94654793e-011          ATEND
+SEGRRIVERE            104           GP-D     9.25474322   -0.950026206             -0          ATBEG
+SEGRRIVERE            104           GP-D     11.7556002   -0.925153617              0          ATEND
+SEGRRIVERE            105           GP-D     12.2555717   -0.919825938             -0          ATBEG
+SEGRRIVERE            105           GP-D     14.7562004   -0.891403006              0          ATEND
+SEGRRIVERE            106           GP-D     15.2561651   -0.885473199             -0          ATBEG
+SEGRRIVERE            106           GP-D     17.7566031   -0.854581307              0          ATEND
+SEGRRIVERE            107           GP-D     18.2565629   -0.848245927             -0          ATBEG
+SEGRRIVERE            107           GP-D     20.7568475   -0.815769805              0          ATEND
+SEGRRIVERE            108           GP-D     21.2568042   -0.809186133             -0          ATBEG
+SEGRRIVERE            108           GP-D     23.7569732   -0.775813869              0          ATEND
+SEGRRIVERE            109           GP-D     24.2569282   -0.769099901             -0          ATBEG
+SEGRRIVERE            109           GP-D     26.7570197   -0.735322948              0          ATEND
+SEGRRIVERE            110           GP-D     27.2569739   -0.728557385             -0          ATBEG
+SEGRRIVERE            110           GP-D     29.7570264   -0.694670576              0          ATEND
+
+LOC2GLOBIN            101           GP-C     2.99822403    0.006948798              0     2.74822469  0.00637189151              0    0.249999334 0.000606906488              0              0              0              0              0              0              0              0         3e-005              0     2.99822403    0.006948798              0              0         3e-005              0              0              0              0              0              0              0
+LOC2GLOBOUT            101           GP-C     2.99822403    0.006948798              0     2.74822469  0.00637189151              0    0.250027322 0.000627144659              0              0              0              0              0              0              0 2.79880343e-005 5.02381712e-005              0     2.99822403    0.006948798              0 2.79880343e-005 5.02381712e-005              0              0              0              0              0              0              0
+LOC2GLOBIN            101           GP-R     2.99822403    0.006948798           -0.8     2.74822469  0.00637189151           -0.8    0.249999334 0.000606906488           -0.8              0              0              0              0              0              0              0         3e-005           -0.8     2.99822403    0.006948798           -0.8              0         3e-005           -0.8              0              0              0              0              0              0
+LOC2GLOBOUT            101           GP-R     2.99822403    0.006948798           -0.8     2.74822478  0.00634831922           -0.8    0.250027228 0.000650716925           -0.8              0              0              0              0              0              0 2.79880343e-005 5.02381712e-005           -0.8     2.99822403    0.006948798           -0.8 2.79880343e-005 5.02381712e-005           -0.8              0              0              0              0              0              0
+LOC2GLOBIN            101           GP-L     2.99822403    0.006948798            0.8     2.74822469  0.00637189151            0.8    0.249999334 0.000606906488            0.8              0              0              0              0              0              0              0         3e-005            0.8     2.99822403    0.006948798            0.8              0         3e-005            0.8              0              0              0              0              0              0
+LOC2GLOBOUT            101           GP-L     2.99822403    0.006948798            0.8     2.74822478  0.00634831922            0.8    0.250027228 0.000650716925            0.8              0              0              0              0              0              0 2.79880343e-005 5.02381712e-005            0.8     2.99822403    0.006948798            0.8 2.79880343e-005 5.02381712e-005            0.8              0              0              0              0              0              0
+LOC2GLOBIN            101           GP-D     3.00222597   -0.993051202             -0     2.75222663   -0.993627426             -0    0.250449336   -0.999393776              0              0              0              0              0              0              0        0.00045       -0.99997             -0     3.00222597   -0.993051202             -0        0.00045       -0.99997             -0              0              0              0              0              0              0
+LOC2GLOBOUT            101           GP-D     3.00222597   -0.993051202              0     2.75222663   -0.993627426              0    0.250477324   -0.999373538  -1.34693e-016              0              0              0              0              0              0 0.000477988034   -0.999949762 4.08700851e-018     3.00222597   -0.993051202              0 0.000477988034   -0.999949762 4.08700851e-018              0              0              0              0              0              0
+USERVALB              101 0 0             -0
+USERVALM              101 0 0              0
+USERVALW              101 0 0              0
+USERVALW              101 0 2              0
+USERVALB              101 0 3              0
+USERVALM              101 0 8         0.0051
+USERVALW              101 0 7         0.0047
+USERVALW              101 0 9         0.0004
+USERVALW              101 0 10         2.7482
+USERVALB              101 0 5              0
+USERVALM              101 0 15         0.0051
+USERVALW              101 0 13         0.0047
+USERVALW              101 0 15         0.0004
+USERVALW              101 0 16         2.7482
+LOC2GLOBIN            102           GP-C     5.99680194    0.023436415 -3.69457693e-016     5.74680573   0.0220601417 -1.99900412e-016     3.24819225  0.00830483314 1.4947577e-015      2.7481967  0.00635165334 1.52553898e-015    0.249999334 0.000606906488 1.38776002e-016              0              0              0     5.99680194    0.023436415 -3.69457693e-016     2.99819604  0.00692855983 1.66431498e-015     2.99819604  0.00692855983 1.66431498e-015              0         3e-005              0
+LOC2GLOBOUT            102           GP-C     5.99680194    0.023436415 -3.69457693e-016     5.74680573   0.0220601417 -9.19149426e-017      3.2481434  0.00833983211 2.68206934e-015     2.74814791   0.0063755856 3.23715338e-015    0.249950666 0.000575544123 -2.52946606e-012              0              0              0     5.99680194    0.023436415 -3.69457693e-016     2.99814723  0.00695802553 2.55485029e-013     2.99814723  0.00695802553 2.55485029e-013 -4.86548739e-005 -6.89580251e-006 -2.78171567e-012
+LOC2GLOBIN            102           GP-R     5.99680194    0.023436415           -0.8     5.74680573   0.0220601417           -0.8     3.24819225  0.00830483314           -0.8      2.7481968  0.00632808105           -0.8     0.24999924 0.000630478754           -0.8              0              0              0     5.99680194    0.023436415           -0.8     2.99819604  0.00692855983           -0.8     2.99819604  0.00692855983           -0.8 -1.28273151e-020         3e-005           -0.8
+LOC2GLOBOUT            102           GP-R     5.99680194    0.023436415           -0.8     5.74680573   0.0220601417           -0.8     3.24814361  0.00830456534           -0.8       2.748148  0.00635201284           -0.8    0.249950571  0.00059911591           -0.8              0              0              0     5.99680194    0.023436415           -0.8     2.99814723  0.00695802505           -0.8     2.99814723  0.00695802505           -0.8 -4.8654872e-005 -6.89627951e-006           -0.8
+LOC2GLOBIN            102           GP-L     5.99680194    0.023436415            0.8     5.74680573   0.0220601417            0.8     3.24819225  0.00830483314            0.8      2.7481968  0.00632808105            0.8     0.24999924 0.000630478754            0.8              0              0              0     5.99680194    0.023436415            0.8     2.99819604  0.00692855983            0.8     2.99819604  0.00692855983            0.8 1.28273151e-020         3e-005            0.8
+LOC2GLOBOUT            102           GP-L     5.99680194    0.023436415            0.8     5.74680573   0.0220601417            0.8     3.24814361  0.00830456534            0.8       2.748148  0.00635201379            0.8    0.249950571 0.000599116864            0.8              0              0              0     5.99680194    0.023436415            0.8     2.99814723  0.00695802601            0.8     2.99814723  0.00695802601            0.8 -4.86548758e-005 -6.89532551e-006            0.8
+LOC2GLOBIN            102           GP-D     6.00230716   -0.976571866 -3.6939175e-016     5.75231094    -0.97794676 -2.00101188e-016      3.2521942   -0.991696546 1.49290908e-015     2.75219864   -0.993647664 1.52342364e-015    0.250449336   -0.999393776 -4.00852947e-021              0              0              0     6.00230716   -0.976571866 -3.6939175e-016     3.00219798    -0.99307144 1.66219964e-015     3.00219798    -0.99307144 1.66219964e-015        0.00045       -0.99997              0
+LOC2GLOBOUT            102           GP-D     6.00230716   -0.976571866 -3.73728594e-016     5.75231094    -0.97794676 -2.04443996e-016      3.2521675   -0.991661459 5.96293999e-010     2.75217198   -0.993623643 5.96265214e-010    0.250422802   -0.999425128 5.93724726e-010              0              0              0     6.00230716   -0.976571866 -3.73728594e-016     3.00217131   -0.993041886 5.96517869e-010     3.00217131   -0.993041886 5.96517869e-010 0.000423478937    -1.00000689 5.93472213e-010
+USERVALB              102 0 0             -0
+USERVALM              102 0 0              0
+USERVALM              102 0 2              0
+USERVALW              102 0 0              0
+USERVALW              102 0 2              0
+USERVALW              102 0 4         2.7487
+USERVALB              102 0 3             -0
+USERVALM              102 0 8         0.0088
+USERVALM              102 0 10         0.0008
+USERVALW              102 0 7              0
+USERVALW              102 0 9              0
+USERVALB              102 0 5              0
+USERVALM              102 0 15         0.0088
+USERVALM              102 0 17         0.0008
+USERVALW              102 0 13              0
+USERVALW              102 0 15              0
+
+SAVEUNIT               MG No description available
+
+NODEERE               104     8.99569442     0.04748751              0
+
+SEGRIVERE             103           GP-C     8.99569442     0.04748751              0          ATEND
+
+SEGRIVERE             103           GP-D     9.00374657   -0.952521124 8.00819262e-016          ATEND
+
+SICO       2.00427110753e-076   0.999958950217                0               -1                0                1
+
+CROSS      SEC
+
+POINT           -1.000000         0.0000          OUTER
+LINE             1.000000         0.0000
+LINE             1.000000        -1.0000
+LINE            -1.000000        -1.0000
+
+END
+

@@ -1,0 +1,19 @@
+{% extends "admin_list_base.html" %}
+{% from "html_utils.html" import table_select %}
+{% if flag=="kuang" %}
+   {% set activeMenu = "bp_list" %}
+   {% else %}
+   {% set activeMenu = "menu_role_list" %}
+{% endif %}
+{% block mainTitle %}角色管理{% endblock %}
+
+{% block tableHead %}
+    {{ table_select("all") }}
+    <th>角色名称</th>
+    <th>描述</th>
+{% endblock %}
+{% block tableRow %}
+    {{ table_select(item.id) }}
+    <td><a href="{{ url_for('main.admin_edit_role',roleId=item.id) }}">{{ item.name }}</a></td>
+    <td>{{ item.desc }}</td>
+{% endblock %}

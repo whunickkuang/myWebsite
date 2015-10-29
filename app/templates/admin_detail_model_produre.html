@@ -1,0 +1,961 @@
+{% macro render_produre(surveyed_data_matched,surveyed_data_casted) %}
+            <div id="wizard" class="wizard-big">
+                <h3>设置匹配-浇筑</h3>
+                <section>
+                    <div class="col col-md-12">
+
+
+                        <div class="col-md-4 text-left ">
+
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 ">GP-R</label>
+                                <label class="col-md-4 ">浇筑</label>
+                                <label class="col-md-4 ">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_offset_end }}</label>
+                                <input class="col-md-4 text-left " disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <input type="text" value="{{ surveyed_data_matched.GP_R_elevation_end }}"
+                                       class="col-md-4 text-left">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_length_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-C</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_C_offset_end }}">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_C_elevation_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label type="text"
+                                       class="col-md-4 text-left">{{ surveyed_data_matched.GP_C_length_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-L</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_offset_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_L_elevation_end }}">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_length_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col col-md-12">
+
+
+                        <div class="col-md-4 text-left ">
+
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 ">GP-R</label>
+                                <label class="col-md-4 ">浇筑</label>
+                                <label class="col-md-4 ">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_offset_begin }}</label>
+                                <input class="col-md-4 text-left " disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <input type="text" value="{{ surveyed_data_matched.GP_R_elevation_begin }}"
+                                       class="col-md-4 text-left">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_length_begin }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-C</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_C_offset_begin }}">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_C_elevation_begin }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <input value="{{ surveyed_data_matched.GP_C_length_begin }}" class="col-md-4 text-left">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-L</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_offset_begin }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_L_elevation_begin }}">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_length_begin }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    {#                    <div><input type="text" id="test3" value="sss">#}
+                    {#                    <label id="label1">k</label></div>#}
+                    {##}
+                    {#                    <p>#}
+                    {#                        This is the first content.#}
+                    {#                    </p>#}
+                    {#                    <input type="checkbox">#}
+
+
+                </section>
+                <h3>设置测量钉</h3>
+
+                <section class="step-content">
+                    <div class="col col-md-12" style="visibility:hidden">
+
+
+                        <div class="col-md-4 text-left ">
+
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 ">GP-R</label>
+                                <label class="col-md-4 ">浇筑</label>
+                                <label class="col-md-4 ">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_offset_end }}</label>
+                                <input class="col-md-4 text-left " disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <input type="text" value="{{ surveyed_data_matched.GP_R_elevation_end }}"
+                                       class="col-md-4 text-left">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_length_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-C</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_C_offset_end }}">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_C_elevation_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label type="text"
+                                       class="col-md-4 text-left">{{ surveyed_data_matched.GP_C_length_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-L</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_offset_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_L_elevation_end }}">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_length_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col col-md-12" style="visibility:hidden">
+
+
+                        <div class="col-md-4 text-left ">
+
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 ">GP-R</label>
+                                <label class="col-md-4 ">浇筑</label>
+                                <label class="col-md-4 ">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_offset_begin }}</label>
+                                <input class="col-md-4 text-left " disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <input type="text" value="{{ surveyed_data_matched.GP_R_elevation_begin }}"
+                                       class="col-md-4 text-left">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_length_begin }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-C</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_C_offset_begin }}">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_C_elevation_begin }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <input value="{{ surveyed_data_matched.GP_C_length_begin }}" class="col-md-4 text-left">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-L</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_offset_begin }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_L_elevation_begin }}">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_length_begin }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="col col-md-12">
+
+
+                        <div class="col-md-4 text-left ">
+
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 ">GP-R</label>
+                                <label class="col-md-4 ">浇筑</label>
+                                <label class="col-md-4 ">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_casted.GP_R_offset_end }}</label>
+                                <input class="col-md-4 text-left " disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <input type="text" value="{{ surveyed_data_casted.GP_R_elevation_end }}"
+                                       class="col-md-4 text-left">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_casted.GP_R_length_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-C</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_casted.GP_C_offset_end }}">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_casted.GP_C_elevation_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label type="text"
+                                       class="col-md-4 text-left">{{ surveyed_data_casted.GP_C_length_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-L</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_casted.GP_L_offset_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_casted.GP_L_elevation_end }}">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_casted.GP_L_length_end }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col col-md-12">
+
+
+                        <div class="col-md-4 text-left ">
+
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 ">GP-R</label>
+                                <label class="col-md-4 ">浇筑</label>
+                                <label class="col-md-4 ">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_offset_begin }}</label>
+                                <input class="col-md-4 text-left " disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <input type="text" value="{{ surveyed_data_matched.GP_R_elevation_begin }}"
+                                       class="col-md-4 text-left">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_length_begin }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-C</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_C_offset_begin }}">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_C_elevation_begin }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <input value="{{ surveyed_data_matched.GP_C_length_begin }}" class="col-md-4 text-left">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-L</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_offset_begin }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_L_elevation_begin }}">
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_length_begin }}</label>
+                                <input class="col-md-4 text-left" disabled=True>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </section>
+
+                <h3>设置测量钉</h3>
+
+                <section class="step-content">
+
+                    <div class="col col-md-12">
+
+
+                        <div class="col-md-4 text-left ">
+
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 ">GP-R</label>
+                                <label class="col-md-4 ">浇筑</label>
+                                <label class="col-md-4 ">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_offset_end }}</label>
+                                <input class="col-md-4 text-left "
+                                       value="{{ perfect_casted_matched_data.GP_R_offset_end }}">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <input type="text" value="{{ surveyed_data_matched.GP_R_elevation_end }}"
+                                       class="col-md-4 text-left">
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_R_elevation_end }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_length_end }}</label>
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_R_length_end }}">
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-C</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_C_offset_end }}">
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_C_offset_end }}">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_C_elevation_end }}</label>
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_C_elevation_end }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label type="text"
+                                       class="col-md-4 text-left">{{ surveyed_data_matched.GP_C_length_end }}</label>
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_C_length_end }}">
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-L</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_offset_end }}</label>
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_L_offset_end }}">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_L_elevation_end }}">
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_L_elevation_end }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_length_end }}</label>
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_L_length_end }}">
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col col-md-12">
+
+
+                        <div class="col-md-4 text-left ">
+
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 ">GP-R</label>
+                                <label class="col-md-4 ">浇筑</label>
+                                <label class="col-md-4 ">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_offset_begin }}</label>
+                                <input class="col-md-4 text-left "
+                                       value="{{ perfect_casted_matched_data.GP_R_offset_begin }}">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <input type="text" value="{{ surveyed_data_matched.GP_R_elevation_begin }}"
+                                       class="col-md-4 text-left">
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_R_elevation_begin }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_length_begin }}</label>
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_R_length_begin }}">
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-C</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_C_offset_begin }}">
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_C_offset_begin }}">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_C_elevation_begin }}</label>
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_C_elevation_begin }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <input value="{{ surveyed_data_matched.GP_C_length_begin }}" class="col-md-4 text-left">
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_C_length_begin }}">
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-L</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_offset_begin }}</label>
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_L_offset_begin }}">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_L_elevation_begin }}">
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_L_elevation_begin }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_length_begin }}</label>
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_matched_data.GP_L_length_begin }}">
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div style="visibility: hidden">
+                        <p>kongbai</p>
+                    </div>
+                    <div style="visibility: hidden">
+                        <p>kongbai</p>
+                    </div>
+
+                    <div class="col col-md-12">
+
+
+                        <div class="col-md-4 text-left ">
+
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 ">GP-R</label>
+                                <label class="col-md-4 ">浇筑</label>
+                                <label class="col-md-4 ">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_casted.GP_R_offset_end }}</label>
+                                <input class="col-md-4 text-left " value="{{ perfect_casted_data.GP_R_offset_end }}">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <input type="text" value="{{ surveyed_data_casted.GP_R_elevation_end }}"
+                                       class="col-md-4 text-left">
+                                <input class="col-md-4 text-left" value="{{ perfect_casted_data.GP_R_elevation_end }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_casted.GP_R_length_end }}</label>
+                                <input class="col-md-4 text-left" value="{{ perfect_casted_data.GP_R_length_end }}">
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-C</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_casted.GP_C_offset_end }}">
+                                <input class="col-md-4 text-left" value="{{ perfect_casted_data.GP_C_offset_end }}">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_casted.GP_C_elevation_end }}</label>
+                                <input class="col-md-4 text-left" value="{{ perfect_casted_data.GP_C_offset_end }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label type="text"
+                                       class="col-md-4 text-left">{{ surveyed_data_casted.GP_C_length_end }}</label>
+                                <input class="col-md-4 text-left" value="{{ perfect_casted_data.GP_C_offset_end }}">
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-L</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_casted.GP_L_offset_end }}</label>
+                                <input class="col-md-4 text-left" value="{{ perfect_casted_data.GP_L_offset_end }}">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_casted.GP_L_elevation_end }}">
+                                <input class="col-md-4 text-left" value="{{ perfect_casted_data.GP_L_elevation_end }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_casted.GP_L_length_end }}</label>
+                                <input class="col-md-4 text-left" value="{{ perfect_casted_data.GP_L_length_end }}">
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col col-md-12">
+
+
+                        <div class="col-md-4 text-left ">
+
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 ">GP-R</label>
+                                <label class="col-md-4 ">浇筑</label>
+                                <label class="col-md-4 ">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_offset_begin }}</label>
+                                <input class="col-md-4 text-left " value="{{ perfect_casted_data.GP_R_offset_begin }}">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <input type="text" value="{{ surveyed_data_matched.GP_R_elevation_begin }}"
+                                       class="col-md-4 text-left">
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_data.GP_R_elevation_begin }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_R_length_begin }}</label>
+                                <input class="col-md-4 text-left" value="{{ perfect_casted_data.GP_R_length_begin }}">
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-C</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_C_offset_begin }}">
+                                <input class="col-md-4 text-left" value="{{ perfect_casted_data.GP_C_offset_begin }}">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_C_elevation_begin }}</label>
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_data.GP_C_elevation_begin }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <input value="{{ surveyed_data_matched.GP_C_length_begin }}" class="col-md-4 text-left">
+                                <input class="col-md-4 text-left" value="{{ perfect_casted_data.GP_C_length_begin }}">
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 text-left ">
+                            <div class="col-md-12">
+
+                                <label class="col-md-4 text-left">GP-L</label>
+                                <label class="col-md-4 text-left">浇筑</label>
+                                <label class="col-md-4 text-left">测量值</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">偏置</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_offset_begin }}</label>
+                                <input class="col-md-4 text-left" value="{{ perfect_casted_data.GP_L_offset_begin }}">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">高度</label>
+
+                                <input type="text" class="col-md-4 text-left"
+                                       value="{{ surveyed_data_matched.GP_L_elevation_begin }}">
+                                <input class="col-md-4 text-left"
+                                       value="{{ perfect_casted_data.GP_L_elevation_begin }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 text-left">长度</label>
+                                <label class="col-md-4 text-left">{{ surveyed_data_matched.GP_L_length_begin }}</label>
+                                <input class="col-md-4 text-left" value="{{ perfect_casted_data.GP_L_length_begin }}">
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </section>
+
+                <h3>预览</h3>
+
+                <section>
+                    <div class="text-center m-t-md">
+                        <h2>预览</h2>
+
+                        <p>
+                            This is last content.
+                        </p>
+                    </div>
+                </section>
+
+                <h3>完成</h3>
+
+                <section>
+                    <div class="text-center m-t-md">
+                        <h2>完成</h2>
+
+                        <p>
+                            This is last content.
+                        </p>
+                    </div>
+                </section>
+            </div>
+
+{% endmacro %}

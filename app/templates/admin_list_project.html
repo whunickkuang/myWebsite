@@ -1,0 +1,88 @@
+{% extends "admin_list_base.html" %}
+{% from "html_utils.html" import table_select %}
+{% set activeMenu = "menu_project_list" %}
+{% block mainTitle %}项目管理{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+        </li>
+        <li class="active">
+            <strong>项目列表</strong>
+        </li>
+    </ol>
+{% endblock %}
+
+{% block otherjs %}
+    <script type="text/javascript">
+
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+        var identify = "{{ identify }}";
+        if (identify == "organization") {
+            $.getJSON($SCRIPT_ROOT + '{{ url_for('main.get_session_project_list')}}', {}, function (data) {
+                var project_list = data.result;
+                $("#navProjectList").children().remove();
+                //alert(project_list.length);
+                if (project_list.length != 0) {
+                    $("#navProjectDrop").text(project_list[0]['project_name']);
+                }
+                else {
+                    $("#navProjectDrop").text("");
+                }
+                var url_base = "{{url}}";
+                //alert(url_base.substr(0 ,url_base.length-1));
+                project_list.forEach(function (e) {
+                    var url = url_base.substr(0, url_base.length - 1) + e['project_id'];
+                    //alert(e['project_name']);
+                    var project_name = e['project_name'];
+                    var a = "{{ url_for("main.change_project",projectId=project_id) }}";
+                    var li_project = $("<li><a href=" + url + ">" + project_name + "</a> </li>");
+                    $("#navProjectList").append(li_project);
+
+                });
+            });
+
+        }
+
+    </script>
+{% endblock %}
+{% block mainContent %}
+    <div class="ibox ibox-title">项目列表</div>
+    <div class="ibox ibox-content">
+        {% if current_user.user_role_type=='公司管理员' %}
+            <div id="table_toolbar" class="btn-group" role="group">
+                <a id="table_btn_new" class='btn btn-primary' href="new"><i class="glyphicon glyphicon-plus"></i> 新建</a>
+                <a id="table_btn_del" class='btn btn-danger' href="#"><i class="glyphicon glyphicon-trash"></i> 删除</a>
+            </div>
+        {% endif %}
+        <table id="dataTable" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%"
+               style="display: none">
+            <thead>
+            <tr>
+                {% block tableHead %}
+                    {{ table_select("all") }}
+                    <th>项目名称</th>
+                    <th>描述</th>
+                    <th>片数</th>
+                    <th>状态</th>
+                {% endblock %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+                {% set itemLoop = loop %}
+                <tr>
+                    {{ table_select(item.project_id) }}
+                    <td>
+                        <a href="{{ url_for('main.admin_edit_project',projectId=item.project_id) }}">{{ item.project_name }}</a>
+                    </td>
+                    <td>{{ item.project_introduction or "暂无描述" }}</td>
+                    <td><span class="label label-primary"> {{ item.project_pieces }}</span></td>
+                    <td>{{ item.project_status }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

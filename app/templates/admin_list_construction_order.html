@@ -1,0 +1,120 @@
+{% extends "admin_list_base.html" %}
+{% from "html_utils.html" import table_select %}
+{% set activeMenu = "menu_construction_order_list" %}
+{% block mainTitle %}施工指令管理{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+        </li>
+        {% if items is not none and current_user.user_role_type!='公司管理员' %}
+            {% for item in items %}
+
+            {% if current_user.can(1, session['project_id']) and item is not none  %}
+                <li>
+                    <a href="{{ url_for('main.admin_edit_project',projectId=item.segment.seg_model.project.project_id) }}">{{ item.segment.seg_model.project.project_name }}</a>
+                </li>
+            {% else %}
+                <li>
+                    {{ item.segment.seg_model.project.project_name }}
+                </li>
+            {% endif %}
+            {% endfor %}
+
+        {% endif %}
+        <li class="active">
+            <strong>施工指令列表</strong>
+        </li>
+    </ol>
+{% endblock %}
+{% block otherjs %}
+    <script src="{{ url_for('static',filename="themes/inspinia/js/jquery-2.1.1.js") }}"></script>
+    <script src="{{ url_for('static',filename="themes/inspinia/js/ajaxfileupload.js") }}"></script>
+    <script>
+        $(function(){
+            $("#select-model").change(function(){
+                user_id = {{ session['user_id'] }};
+                selected_id=$(this).children("option:selected").val();
+                window.location = '/admin/construction/order/model_id='+selected_id;
+            })
+            if( $("#select-model").children("option").length == 0){
+                $("#up").attr("disabled","true");
+            }
+        })
+    </script>
+    <script type=text/javascript>
+
+        function ajaxFileUpload() {
+            $.ajaxFileUpload
+            (
+                    {
+                        url: '{{ url_for('main.admin_model_upload_file') }}', //用于文件上传的服务器端请求地址
+                        secureuri: false, //一般设置为false
+                        fileElementId: 'touxiang', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                        dataType: 'text', //返回值类型 一般设置为json
+                        success: function (data, status)  //服务器成功响应处理函数
+                        {
+                            {#                        window.location = "{{ url_for('main.admin_model_list') }}";#}
+                            window.location.reload(true);
+
+                        },
+                        error: function (data, status, e)//服务器响应失败处理函数
+                        {
+                            alert('error');
+                            alert(e);
+
+                        }
+                    }
+            );
+            return false;
+        }
+    </script>
+{% endblock %}
+{% block mainContent %}
+    <div class="ibox ibox-title">施工指令列表</div>
+    <div class="ibox ibox-content">
+    <span class="col col-md-6" style="padding: 0">
+        <select id="select-model" class="selectpicker show-tick" autocomplete="off">
+        {% if models is not none %}
+            {% for item in models %}
+                {% if item.model_id == model_id %}
+                    <option value="{{ item.model_id }}" selected='selected'>{{ item.model_name }}</option>
+                {% else %}
+                    <option value="{{ item.model_id }}" >{{ item.model_name }}</option>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        </select>
+    </span>
+    <table id="dataTable" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%"
+           style="display: none">
+        <thead>
+        <tr>
+            {% block tableHead %}
+                {{ table_select("all") }}
+                <th>指令编号</th>
+{#                <th>状态</th>#}
+                <th>所属项目</th>
+                <th>所属模型</th>
+            {% endblock %}
+        </tr>
+        </thead>
+        <tbody>
+        {% if items is not none %}
+        {% for item in items %}
+            {% set itemLoop = loop %}
+            <tr>
+                {{ table_select(item.construction_order_id) }}
+                <td>
+                    <a href="{{ url_for('main.admin_construction_order_detail',construction_order_id=item.construction_order_id) }}">{{ item.construction_order_number }}</a>
+                </td>
+{#                <td>{{ item.construction_order_status }}</td>#}
+                <td>{{ item.segment.seg_model.project.project_name }}</td>
+                <td>{{ item.segment.seg_model.model_name }}</td>
+            </tr>
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}

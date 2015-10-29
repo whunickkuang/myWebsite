@@ -1,0 +1,137 @@
+{% extends "admin_list_base.html" %}
+{% from "html_utils.html" import table_select %}
+{% from "html_utils.html" import no_survey_data_dialog %}
+{% set activeMenu = "menu_bed_new" %}
+{% block mainTitle %}台座管理{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+        </li>
+        <li>
+            <a href="{{ url_for('main.admin_edit_project',projectId=bed_box.project.project_id) }}">{{ bed_box.project.project_name }}</a>
+        </li>
+        <li>
+            <a href="{{ url_for('main.admin_bed_list') }}">台座列表</a>
+        </li>
+        <li class="active">
+            <strong>{{ bed_box.bed_name }}</strong>
+        </li>
+    </ol>
+{% endblock %}
+{% block notes %}
+    <div class="ibox ibox-title">
+    <div class="row">
+        <div class="col-sm-3 text-center">台座名称：{{ bed_box.bed_name }}</div>
+        <div class="col-sm-4 text-center">默认周期：{{ bed_box.bed_default_period }}天</div>
+        <div class="col-sm-4 text-center">所属项目：{{ bed_box.project.project_name }}</div>
+    </div>
+    </div>
+{% endblock %}
+{% block otherjs %}
+    <script src="{{ url_for('static',filename="themes/inspinia/js/ajaxfileupload.js") }}"></script>
+    <script type=text/javascript>
+
+        function ajaxFileUpload() {
+            $.ajaxFileUpload
+            (
+                    {
+                        url: '{{ url_for('main.admin_bed_upload_file',bed_box_id = bed_box.bed_id) }}', //用于文件上传的服务器端请求地址
+                        secureuri: false, //一般设置为false
+                        fileElementId: 'modelFile', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                        dataType: 'text', //返回值类型 一般设置为json
+                        success: function (data, status)  //服务器成功响应处理函数
+                        {
+
+                            var result = data.substring(data.indexOf('data')+6,data.indexOf('data')+8);
+                            //alert(result['result']);
+                            if(result==1){
+                                $("#confirm_cast").modal('show');
+                        var confirm_btn = $("#confirm_cast .btn-primary");
+                        var close_btn = $("#confirm_cast .close");
+                        close_btn.click(function(){
+                            $("#confirm_cast").modal('hide');
+                            window.location.reload(true);
+                        });
+                        confirm_btn.click(function () {
+                            $("#confirm_cast").modal('hide');
+                            window.location.reload(true);
+                        });
+                            }else{
+                                window.location = "{{ url_for('main.admin_bed_detail',bed_id=bed_box.bed_id) }}";
+                            }
+                        },
+                        error: function (data, status, e)//服务器响应失败处理函数
+                        {
+                            alert('error');
+                            alert(e);
+
+                        }
+                    }
+            );
+            return false;
+        }
+    </script>
+{% endblock %}
+{% block mainContent %}
+    <div class="ibox ibox-content">
+    <div id="table_toolbar" class="btn-group" role="group">
+        <div class="btn-group">
+            <label id="up" title="Upload image file" for="modelFile" class="btn btn-primary">
+                <i class="glyphicon glyphicon-plus">
+                </i>
+                <input type="file" accept="file/*" name="file" id="modelFile" class="hide"
+                       onchange="ajaxFileUpload()">
+                导入文件
+            </label>
+        </div>
+        <a id="table_btn_del" class='btn btn-danger' href="#"><i class="glyphicon glyphicon-trash"></i> 删除</a>
+    </div>
+    <table id="dataTable" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%"
+           style="display: none">
+        <thead>
+        <tr>
+            {% block tableHead %}
+                {{ table_select("all") }}
+                <th>模型名称</th>
+                <th>模型编号</th>
+                {#<th>片数</th>#}
+                <th>预期开始</th>
+                <th>预期结束</th>
+                <th>实际开始</th>
+                <th>实际结束</th>
+                <th>状态</th>
+            {% endblock %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+            {% set itemLoop = loop %}
+            <tr>
+                {{ table_select(item.model_id) }}
+                <td><a href="{{ url_for('main.admin_detail_model',model_id=item.model_id) }}">{{ item.model_name }}</a></td>
+                <td>{{ item.model_number }}</td>
+                {#<td><label class="label label-primary">{{ item.model_pieces }}</label></td>#}
+                <td>{{ item.model_expect_startTime }}</td>
+                <td>{{ item.model_expect_endTime }}</td>
+                {% if  item.model_actual_startTime is none%}
+                <td>未开始</td>
+                {% else %}
+                <td>{{ item.model_actual_startTime }}</td>
+                {% endif %}
+            {% if  item.model_actual_endTime is none%}
+                <td>未结束</td>
+            {% else %}
+                <td>{{ item.model_actual_endTime }}</td>
+            {% endif %}
+                <td>{{ item.model_status }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}
+{% block otherContents %}
+    {{ no_survey_data_dialog("confirm_cast","导入模型异常","项目已结束，无法再导入模型") }}
+    {{ confirm_dialog("confirm_del","删除确认","你确定要删除这<span id='number_of_items'></span>项吗？") }}
+{% endblock %}

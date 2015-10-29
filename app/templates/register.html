@@ -1,0 +1,106 @@
+{% from "html_utils.html" import css_file, js_file %}
+{% from "form_render.html" import render__form_error %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register</title>
+
+    {{ css_file("libs/themes/inspinia/css/bootstrap.min.css") }}
+    {{ css_file("libs/themes/inspinia/font-awesome/css/font-awesome.css") }}
+    {{ css_file("libs/plugins/iCheck/custom.css") }}
+    {{ css_file("libs/themes/inspinia/css/animate.css") }}
+    {{ css_file("libs/themes/inspinia/css/style.css") }}
+
+</head>
+
+<body class="gray-bg">
+{% block content %}
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+
+
+        <div class="middle-box text-center loginscreen   animated fadeInDown">
+            <div>
+                <div>
+
+                    <h1 class="logo-name">桥</h1>
+
+                </div>
+                <h3>注册 桥+</h3>
+
+{#                <p>Create account to see it in action.</p>#}
+
+                <form class="m-t" role="form" method="post" action="{{ url_for('main.register') }}">
+                    <div>{{ form.hidden_tag() }}</div>
+                    <div class="form-group">
+                        {#                    <input type="text" class="form-control" placeholder="Name" required="">#}
+                        <br>{{ form.username(class="form-control", placeholder="用户名") }}
+                        <div>{{ render__form_error(form.username) }}</div>
+                    </div>
+                    <div class="form-group">
+                        {#                    <input type="email" class="form-control" placeholder="Email" required="">#}
+                        <br>{{ form.email(class="form-control", placeholder="邮箱") }}
+                        <div>{{ render__form_error(form.email) }}</div>
+                    </div>
+                    <div class="form-group">
+                        {#                    <input type="password" class="form-control" placeholder="Password" required="">#}
+                        <br>{{ form.password(class="form-control", placeholder="密码") }}
+                       <div> {{ render__form_error(form.password) }}</div>
+                    </div>
+                    <div class="form-group">
+                        {#                    <input type="password" class="form-control" placeholder="Password" required="">#}
+                        <br>{{ form.password2(class="form-control", placeholder="确认密码") }}
+                       <div> {{ render__form_error(form.password2) }}</div>
+                    </div>
+                    <div class="col col-sm-12"></div>
+                    <div class="form-group">
+                         <input type="checkbox" name="input" id="checkRegister"/><i></i> 接受许可条款
+                    </div>
+                    {#                <button type="submit" class="btn btn-primary block full-width m-b">Register</button>#}
+                    {{ form.submit(class="btn btn-primary block full-width m-b") }}
+
+                    <p class="text-muted text-center">
+                        <small>已经注册过帐号?</small>
+                    </p>
+                    <a class="btn btn-sm btn-white btn-block" href="{{ url_for('main.login') }}">登录</a>
+                </form>
+                <p class="m-t">
+                    <small>浙江大学软件学院 &copy; 2015</small>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+<!-- Mainly scripts -->
+
+{{ js_file("libs/jquery/jquery-2.1.1.js") }}
+{{ js_file("libs/themes/inspinia/js/bootstrap.min.js") }}
+<!-- iCheck -->
+
+{{ js_file("libs/plugins/iCheck/icheck.min.js") }}
+<script>
+    $(document).ready(function () {
+
+        $('#submit').click(function(){
+            if( $("#checkRegister").is(':checked')){
+                return true
+            }
+            alert('只有接受条款后才可注册');
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

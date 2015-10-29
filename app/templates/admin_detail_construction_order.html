@@ -1,0 +1,512 @@
+{% extends "admin_edit_base.html" %}
+{% set activeMenu = "menu_construction_order_list" %}
+{% block mainTitle %}施工指令管理{% endblock %}
+
+{% block otherjs %}
+
+    <script type="text/javascript">
+
+        $("#simplyFlag").click(function () {
+
+            if ($("#simplyFlag").prop("checked") == true) {
+
+                $("#simply").css("display", "block");
+                $("#complete").css("display", "none");
+            }
+            if ($("#simplyFlag").prop("checked") == false) {
+
+                $("#simply").css("display", "none");
+                $("#complete").css("display", "block");
+
+            }
+        });
+    </script>
+
+{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb" xmlns="http://www.w3.org/1999/html">
+        <li>
+            <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+        </li>
+        {% if current_user.user_role_type!='公司管理员' %}
+            {% if current_user.can(1, session['project_id']) %}
+                <li>
+                    <a href="{{ url_for('main.admin_edit_project',projectId=session['project_id']) }}">{{ session['project_default_name'] }}</a>
+                </li>
+            {% else %}
+                <li>
+                    {{ session['project_default_name'] }}
+                </li>
+            {% endif %}
+        {% endif %}
+        <li>
+            <a href="{{ url_for('main.admin_construction_order_list') }}">回测数据列表</a>
+        </li>
+        <li class="active">
+            <strong>施工指令</strong>
+        </li>
+    </ol>
+{% endblock %}
+{% block mainContent %}
+
+    <div class="ibox ibox-title">施工指令</div>
+    <div class="ibox ibox-content">
+        <div id="table_toolbar" class="btn-group" role="group">
+            <label>
+                <a id="table_btn_new" class='btn btn-primary'
+                   href="{{ url_for('static', filename = 'constructionOrder/'+filename) }}">
+                    <i class="glyphicon glyphicon-plus"></i>导出施工指令
+                </a>
+
+            </label>
+        </div>
+        <div class="ibox ibox-title">
+            {#    <div class="panel panel-body gray-bg">#}
+            {#        <div class="col-lg-3">所属公司：Unknow</div>#}
+            <div class="col-lg-2"><input id="simplyFlag" type="checkbox"> <label>简化架构</label></div>
+            <div class="col-lg-6" style="padding: 0"><label>指令编号：{{ item.construction_order_number }}</label></div>
+            {#        <div class="col-lg-4">所属项目:{{ item.project.project_name }}</div>#}
+            <div class="col-lg-4"><label>截至日期： {{ item.construction_order_time }}</label></div>
+            {#        <div class="col-lg-3">版本:RMCast Ver 08.11.18.01</div>#}
+        </div>
+        <div id="simply" style="display: none">
+            <table width="85%" class="table table-bordered table-striped" cellspacing="0">
+                {% if is_first==false %}
+                    <thead>
+                    <tr>
+                        <th colspan="6" class="text-center">Match-cast</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th colspan="2" class="text-center th-downgrade">GP-R Begin</th>
+                        <th colspan="2" class="text-center th-downgrade">GP-C Begin</th>
+                        <th colspan="2" class="text-center th-downgrade">GP-L Begin</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td ></td>
+                        <td>Offset:</td>
+                        <td class="tab-number">{{ '%.4f' % item.GP_C_offset_begin_match }}</td>
+                        <td>   </td>
+                        <td>    </td>
+
+                    </tr>
+                    <tr>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_R_elevation_begin_match }}</td>
+                        <td>  </td>
+                        <td>  </td>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_L_elevation_begin_match }}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td ></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                    <tbody>
+                    <tr>
+                        <th colspan="2" class="text-center th-downgrade">GP-R End</th>
+                        <th colspan="2" class="text-center th-downgrade">GP-C End</th>
+                        <th colspan="2" class="text-center th-downgrade">GP-L End</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td ></td>
+                        <td>Offset:</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_C_offset_end_match }}</td>
+                        <td>  </td>
+                        <td>  </td>
+
+                    </tr>
+                    <tr>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_R_elevation_end_match }}</td>
+                        <td></td>
+                        <td></td>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_L_elevation_end_match }}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td ></td>
+                        <td>Length:</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_C_length_end_match }}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">&nbsp;</td>
+                    </tr>
+                    </tbody>
+                {% else %}
+                    <thead>
+                    <tr>
+                        <th colspan="6" class="text-center">floating bulkhead
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th colspan="2" class="text-center th-downgrade">GP-R</th>
+                        <th colspan="2" class="text-center th-downgrade">GP-C</th>
+                        <th colspan="2" class="text-center th-downgrade">GP-L</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="tab-number"></td>
+                        <td>Offset:</td>
+                        <td class="tab-number">{{ '%.4f' % item.float_bulkhead_GP_C_offset }}</td>
+                        <td></td>
+                        <td class="tab-number"></td>
+                    </tr>
+                    <tr>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.float_bulkhead_GP_R_elevation }}</td>
+                        <td></td>
+                        <td class="tab-number"></td>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.float_bulkhead_GP_L_elevation }}</td>
+                    </tr>
+                    <tr>
+                        <td>Length:</td>
+                        <td class="tab-number">{{ '%.4f'%item.float_bulkhead_GP_R_length }}</td>
+                        <td></td>
+                        <td class="tab-number"></td>
+                        <td>Length:</td>
+                        <td class="tab-number">{{ '%.4f'%item.float_bulkhead_GP_L_length }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">&nbsp;</td>
+                    </tr>
+                    </tbody>
+                {% endif %}
+                <thead>
+                <tr>
+                    <th colspan="6" class="text-center">Wet-cast
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th colspan="2" class="text-center th-downgrade">GP-R Begin</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-C Begin</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-L Begin</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="tab-number"></td>
+                    <td>Offset:</td>
+                    <td class="tab-number">{{ '%.4f' % item.GP_C_offset_begin }}</td>
+                    <td></td>
+                    <td class="tab-number"></td>
+                </tr>
+                <tr>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_R_elevation_begin }}</td>
+                    <td></td>
+                    <td class="tab-number"></td>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_L_elevation_begin }}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="tab-number"></td>
+                    <td></td>
+                    <td class="tab-number"></td>
+                    <td></td>
+                    <td class="tab-number"></td>
+                </tr>
+                </tbody>
+                <tbody>
+                <tr>
+                    <th colspan="2" class="text-center th-downgrade">GP-R End</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-C End</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-L End</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="tab-number"></td>
+                    <td>Offset:</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_C_offset_end }}</td>
+                    <td></td>
+                    <td class="tab-number"></td>
+                </tr>
+                <tr>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_R_elevation_end }}</td>
+                    <td></td>
+                    <td class="tab-number"></td>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_L_elevation_end }}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="tab-number"></td>
+                    <td></td>
+                    <td class="tab-number"></td>
+                    <td></td>
+                    <td class="tab-number"></td>
+                </tr>
+                <tr>
+                    <td colspan="6">&nbsp;</td>
+                </tr>
+                </tbody>
+                <thead>
+                <tr>
+                    <th colspan="6" class="text-center">Fixed bulkhead
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th colspan="2" class="text-center th-downgrade">GP-R</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-C</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-L</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="tab-number"></td>
+                    <td>Offset:</td>
+                    <td class="tab-number">{{ '%.4f'%item.bulkhead_GP_C_offset }}</td>
+                    <td></td>
+                    <td class="tab-number"></td>
+                </tr>
+                <tr>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.bulkhead_GP_R_elevation }}</td>
+                    <td></td>
+                    <td class="tab-number"></td>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.bulkhead_GP_L_elevation }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="complete" style="display: block">
+            <table width="85%" class="table table-bordered table-striped" cellspacing="0">
+                {% if is_first==false %}
+                    <thead>
+                    <tr>
+                        <th colspan="6" class="text-center">Match-cast</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th colspan="2" class="text-center th-downgrade">GP-R Begin</th>
+                        <th colspan="2" class="text-center th-downgrade">GP-C Begin</th>
+                        <th colspan="2" class="text-center th-downgrade">GP-L Begin</th>
+                    </tr>
+                    <tr>
+                        <td>Offset:</td>
+                        <td class="tab-number">{{ '%.4f' % item.GP_R_offset_begin_match }}</td>
+                        <td>Offset:</td>
+                        <td class="tab-number">{{ '%.4f' % item.GP_C_offset_begin_match }}</td>
+                        <td>Offset:</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_L_offset_begin_match }}</td>
+                    </tr>
+                    <tr>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_R_elevation_begin_match }}</td>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_C_elevation_begin_match }}</td>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_L_elevation_begin_match }}</td>
+                    </tr>
+                    <tr>
+                        <td>Length:</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_R_length_begin_match }}</td>
+                        <td>Length:</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_C_length_begin_match }}</td>
+                        <td>Length:</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_L_length_begin_match }}</td>
+                    </tr>
+                    </tbody>
+                    <tbody>
+                    <tr>
+                        <th colspan="2" class="text-center th-downgrade">GP-R End</th>
+                        <th colspan="2" class="text-center th-downgrade">GP-C End</th>
+                        <th colspan="2" class="text-center th-downgrade">GP-L End</th>
+                    </tr>
+                    <tr>
+                        <td>Offset:</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_R_offset_end_match }}</td>
+                        <td>Offset:</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_C_offset_end_match }}</td>
+                        <td>Offset:</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_L_offset_end_match }}</td>
+                    </tr>
+                    <tr>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_R_elevation_end_match }}</td>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_C_elevation_end_match }}</td>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_L_elevation_end_match }}</td>
+                    </tr>
+                    <tr>
+                        <td>Length:</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_R_length_end_match }}</td>
+                        <td>Length:</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_C_length_end_match }}</td>
+                        <td>Length:</td>
+                        <td class="tab-number">{{ '%.4f'%item.GP_L_length_end_match }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">&nbsp;</td>
+                    </tr>
+                    </tbody>
+                {% else %}
+                    <thead>
+                    <tr>
+                        <th colspan="6" class="text-center">floating bulkhead
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th colspan="2" class="text-center th-downgrade">GP-R</th>
+                        <th colspan="2" class="text-center th-downgrade">GP-C</th>
+                        <th colspan="2" class="text-center th-downgrade">GP-L</th>
+                    </tr>
+                    <tr>
+                        <td>Offset:</td>
+                        <td class="tab-number">{{ '%.4f' % item.float_bulkhead_GP_R_offset }}</td>
+                        <td>Offset:</td>
+                        <td class="tab-number">{{ '%.4f' % item.float_bulkhead_GP_C_offset }}</td>
+                        <td>Offset:</td>
+                        <td class="tab-number">{{ '%.4f'%item.float_bulkhead_GP_L_offset }}</td>
+                    </tr>
+                    <tr>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.float_bulkhead_GP_R_elevation }}</td>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.float_bulkhead_GP_C_elevation }}</td>
+                        <td>Elevation</td>
+                        <td class="tab-number">{{ '%.4f'%item.float_bulkhead_GP_L_elevation }}</td>
+                    </tr>
+                    <tr>
+                        <td>Length:</td>
+                        <td class="tab-number">{{ '%.4f'%item.float_bulkhead_GP_R_length }}</td>
+                        <td>Length:</td>
+                        <td class="tab-number">{{ '%.4f'%item.float_bulkhead_GP_C_length }}</td>
+                        <td>Length:</td>
+                        <td class="tab-number">{{ '%.4f'%item.float_bulkhead_GP_L_length }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">&nbsp;</td>
+                    </tr>
+                    </tbody>
+                {% endif %}
+                <thead>
+                <tr>
+                    <th colspan="6" class="text-center">Wet-cast
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th colspan="2" class="text-center th-downgrade">GP-R Begin</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-C Begin</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-L Begin</th>
+                </tr>
+                <tr>
+                    <td>Offset:</td>
+                    <td class="tab-number">{{ '%.4f' % item.GP_R_offset_begin }}</td>
+                    <td>Offset:</td>
+                    <td class="tab-number">{{ '%.4f' % item.GP_C_offset_begin }}</td>
+                    <td>Offset:</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_L_offset_begin }}</td>
+                </tr>
+                <tr>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_R_elevation_begin }}</td>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_C_elevation_begin }}</td>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_L_elevation_begin }}</td>
+                </tr>
+                <tr>
+                    <td>Length:</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_R_length_begin }}</td>
+                    <td>Length:</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_C_length_begin }}</td>
+                    <td>Length:</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_L_length_begin }}</td>
+                </tr>
+                </tbody>
+                <tbody>
+                <tr>
+                    <th colspan="2" class="text-center th-downgrade">GP-R End</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-C End</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-L End</th>
+                </tr>
+                <tr>
+                    <td>Offset:</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_R_offset_end }}</td>
+                    <td>Offset:</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_C_offset_end }}</td>
+                    <td>Offset:</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_L_offset_end }}</td>
+                </tr>
+                <tr>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_R_elevation_end }}</td>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_C_elevation_end }}</td>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_L_elevation_end }}</td>
+                </tr>
+                <tr>
+                    <td>Length:</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_R_length_end }}</td>
+                    <td>Length:</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_C_length_end }}</td>
+                    <td>Length:</td>
+                    <td class="tab-number">{{ '%.4f'%item.GP_L_length_end }}</td>
+                </tr>
+                <tr>
+                    <td colspan="6">&nbsp;</td>
+                </tr>
+                </tbody>
+                <thead>
+                <tr>
+                    <th colspan="6" class="text-center">Fixed bulkhead
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th colspan="2" class="text-center th-downgrade">GP-R</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-C</th>
+                    <th colspan="2" class="text-center th-downgrade">GP-L</th>
+                </tr>
+                <tr>
+                    <td>Offset:</td>
+                    <td class="tab-number">{{ '%.4f'%item.bulkhead_GP_R_offset }}</td>
+                    <td>Offset:</td>
+                    <td class="tab-number">{{ '%.4f'%item.bulkhead_GP_C_offset }}</td>
+                    <td>Offset:</td>
+                    <td class="tab-number">{{ '%.4f'%item.bulkhead_GP_L_offset }}</td>
+                </tr>
+                <tr>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.bulkhead_GP_R_elevation }}</td>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.bulkhead_GP_C_elevation }}</td>
+                    <td>Elevation</td>
+                    <td class="tab-number">{{ '%.4f'%item.bulkhead_GP_L_elevation }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+

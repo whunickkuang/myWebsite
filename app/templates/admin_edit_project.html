@@ -1,0 +1,118 @@
+{% extends "admin_edit_base.html" %}
+{% set activeMenu = "menu_project_new" %}
+{% block mainTitle %}项目管理{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+        </li>
+        <li>
+            <a href="{{ url_for('main.admin_project_list') }}">项目列表</a>
+        </li>
+        {% if projectId !='new' %}
+            <li class="active">
+                <strong>{{ form.name.data }}</strong>
+            </li>
+        {% else %}
+            <li class="active">
+                <strong>新建</strong>
+            </li>
+        {% endif %}
+    </ol>
+{% endblock %}
+{% block js %}
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <script type=text/javascript>
+        $(function () {
+            var project_status ={{ status }};
+
+            if (project_status == '1') {
+
+                $(".form-control").attr("disabled", true);
+            }
+            var submit_form = function (e) {
+                $.getJSON($SCRIPT_ROOT + '{{ url_for('main.general_url',projectId=projectId) }}', {}, function (data) {
+                    {#        $('#url').text(data.result);#}
+                    $('#url').attr("value", data.result)
+                });
+                return false;
+            };
+            $('a#generalURL').bind('click', submit_form);
+        });
+    </script>
+{% endblock %}
+
+{% block mainContent %}
+    <div class="ibox ibox-title">{% if projectId !='new' %}
+        <div class="col-sm-4">项目详情</div>{% else %}
+        <div class="col-sm-4">新建项目</div>{% endif %}
+        <div class="col-sm-8"> 组织剩余片数：{{ pieces_left }}</div>
+    </div>
+    <div class="ibox ibox-content">
+        <form class="form-horizontal" method="post"
+              action="{{ url_for('main.admin_edit_project', projectId=projectId) }}">
+
+            {{ form.hidden_tag() }}
+            {{ render_text(form.name) }}
+            {{ render_text(form.desc) }}
+            {{ render_text(form.pieces) }}
+            <div class="form-group {{ 'has-feedback has-error' if form.url.errors }}">
+                <label class="col-sm-2 control-label">项目剩余片数</label>
+
+                <div class="col-sm-9">
+                    <input id="" type="text" name="" value="{{ form.pieces_left.data }}" class="form-control" readonly>
+                    {% if form.url.errors %}
+                        <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                    {% endif %}
+                </div>
+            </div>
+
+
+            {% if projectId !='new' %}
+                <div class="form-group {{ 'has-feedback has-error' if form.url.errors }}">
+                    {% if current_user.user_role_type=='公司管理员'or current_user.can(255, session['project_id']) %}
+                        {% if status==0 %}
+                            <label class="col-sm-2 control-label" style="padding-top: 0px;"><a class='btn btn-primary' href=#
+                                                                     id='generalURL'>生成链接</a></label>
+                        {% endif %}
+                        {% if status==1 %}
+                            <label class="col-sm-2 control-label">项目链接</label>
+                        {% endif %}
+
+                    {% else %}
+                        <label class="col-sm-2 control-label">项目链接</label>
+                    {% endif %}
+                    <div class="col-sm-9">
+                        <input id="url" type="text" name="projectUrl" value="{{ form.url.data or "管理员点击生成链接" }}" class="form-control">
+                        {% if form.url.errors %}
+                            <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if form.url.errors %}
+                <ul class="form-group" style="margin-top: -10px">
+                    {% for error in form.url.errors %}
+                        <li class="col-sm-offset-2 text-danger">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% if (current_user.user_role_type=='公司管理员' or current_user.can(255, session['project_id']))and status==0 %}
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary">保存</button>
+                        <a class="btn btn-primary" href="{{ url_for("main.admin_project_list") }}">返回</a>
+
+                        {% if  projectId!='new'%}
+                        <a class="btn btn-danger"
+                           href="{{ url_for("main.admin_finish_project",projectId=projectId) }}">结束项目</a>
+                            {% endif %}
+                    </div>
+                </div>
+                {#            {{ render_button("main.admin_project_list") }}#}
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}

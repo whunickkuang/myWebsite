@@ -1,0 +1,44 @@
+{% extends "admin_list_base.html" %}
+{% from "html_utils.html" import table_select %}
+{% set activeMenu = "menu_user_list" %}
+{% block mainTitle %}人员管理{% endblock %}
+{% block breadcrumbs %}
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+                </li>
+                <li class="active">
+                    <strong>人员列表</strong>
+                </li>
+            </ol>
+{% endblock %}
+{% block mainContent %}
+    <div class="ibox ibox-title">人员列表</div>
+    <div class="ibox ibox-content">
+    <table id="dataTable" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%" style="display: none">
+        <thead>
+        <tr>
+            {% block tableHead %}
+                {{ table_select("all") }}
+                <th>人员名称</th>
+                <th>邮箱</th>
+                <th>角色</th>
+                <th>所属项目</th>
+            {% endblock %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+            {% set itemLoop = loop %}
+            <tr>
+         {{ table_select(item.user_project_user_id) }}
+         <td><a href="{{ url_for('main.admin_user_detail',projectId=item.user_project_project_id,userId=item.user_project_user_id) }}">{{ item.user.user_name }}</a></td>
+         <td>{{ item.user.user_email }}</td>
+         <td>{{ item.user_project_role or "未指定" }}</td>
+         <td>{{ item.project.project_name }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends "admin_list_base.html" %}
+{% from "html_utils.html" import table_select %}
+{% set activeMenu = "menu_model_list" %}
+{% block mainTitle %}模型管理{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+        </li>
+        {% if project is not none and current_user.user_role_type!='公司管理员' %}
+            <li>
+                {{ project.project_name }}
+            </li>
+        {% endif %}
+        <li class="active">
+            <strong>模型列表</strong>
+        </li>
+    </ol>
+{% endblock %}
+{% block otherjs %}
+    <script src="{{ url_for('static',filename="themes/inspinia/js/ajaxfileupload.js") }}"></script>
+    <script type=text/javascript>
+
+        function ajaxFileUpload() {
+            $.ajaxFileUpload
+            (
+                    {
+                        url: '{{ url_for('main.admin_model_upload_file') }}', //用于文件上传的服务器端请求地址
+                        secureuri: false, //一般设置为false
+                        fileElementId: 'touxiang', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                        dataType: 'text', //返回值类型 一般设置为json
+                        success: function (data, status)  //服务器成功响应处理函数
+                        {
+
+                            //alert(data);
+                            //alert(data.indexOf('data'));
+                            var upload_status = data.substring(data.indexOf('data')+6,data.indexOf('data')+8);
+                            {#window.location = "{{ url_for('main.upload_model_file_result',status=upload_status) }}";#}
+                            if(upload_status==0){
+
+                                window.location = "{{ url_for('main.upload_model_file_result',status=0) }}";
+                            }
+                            if(upload_status==1){
+
+                                window.location = "{{ url_for('main.upload_model_file_result',status=1) }}";
+                            }
+                            if(upload_status==2){
+                                 window.location = "{{ url_for('main.upload_model_file_result',status=2) }}";
+
+                            }
+                            if(upload_status==3){
+                                 window.location = "{{ url_for('main.upload_model_file_result',status=3) }}";
+
+                            }
+                            if(upload_status==4){
+                                 window.location = "{{ url_for('main.upload_model_file_result',status=4) }}";
+
+                            }
+                            //alert(data.substring(data.indexOf('data')+6,data.indexOf('data')+8));
+                            {#                        window.location = "{{ url_for('main.admin_model_list') }}";#}
+                           // window.location.reload(true);
+
+                        },
+                        error: function (data, status, e)//服务器响应失败处理函数
+                        {
+                            alert('error');
+                            alert(e);
+
+                        }
+                    }
+            );
+            return false;
+        }
+    </script>
+{% endblock %}
+{% block mainContent %}
+    <div class="ibox ibox-title">模型管理列表</div>
+    <div class="ibox ibox-content">
+    <div id="table_toolbar" class="btn-group" role="group">
+        <div class="btn-group">
+            <label id="up" title="Upload image file" for="touxiang" class="btn btn-primary"><i
+                    class="glyphicon glyphicon-plus"></i>
+                <input type="file" accept="file/*" name="file" id="touxiang" class="hide" onchange="ajaxFileUpload()">
+                导入文件
+            </label>
+        </div>
+        {#        <a id="table_btn_new" class='btn btn-primary' href="new"><i class="glyphicon glyphicon-plus"></i> 导入模型</a>#}
+        <a id="table_btn_del" class='btn btn-danger' href="#"><i class="glyphicon glyphicon-trash"></i> 删除</a>
+    </div>
+    <table id="dataTable" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%"
+           style="display: none">
+        <thead>
+        <tr>
+            {% block tableHead %}
+                {{ table_select("all") }}
+                <th>模型名称</th>
+                <th>模型编号</th>
+                <th>片数</th>
+                <th>状态</th>
+{#                <th>导入文件状态</th>#}
+                <th>所属项目</th>
+                <th>操作</th>
+            {% endblock %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+            {% set itemLoop = loop %}
+            <tr>
+                {{ table_select(item.model_id) }}
+                <td><a href="{{ url_for('main.admin_detail_model',model_id=item.model_id) }}">{{ item.model_name }}</a>
+                </td>
+                <td>{{ item.model_number }}</td>
+            {% if item.model_pieces is none %}
+            <td><label class="label label-primary">未确定片数</label></td>
+
+            {% else %}
+                <td><label class="label label-primary">{{ item.model_pieces }}</label></td>
+            {% endif %}
+                <td>{{ item.model_status }}</td>
+{#                {% if item.model_filePath %}#}
+{#                <td>已导入模型文件</td>#}
+{#                {% else %}#}
+{#                <td>未导入模型文件</td>#}
+{#                {% endif %}#}
+                <td>{{ item.project.project_name }}</td>
+            <td style="text-align: center">
+            {% if item.model_file_name is not none %}
+{#                {% if item.model_filePath %}#}
+                    <a href="{{ url_for('static',filename = 'modelFile/'+item.model_file_name) }}" class="btn verify-btn btn-primary">导出</a>
+                {% else %}
+                <a href="" class="btn verify-btn btn-primary" disabled="true">无文件</a>
+                {% endif %}
+{#            {% endif %}#}
+            </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}

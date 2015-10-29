@@ -1,0 +1,121 @@
+{% extends "admin_base.html" %}
+{% from "html_utils.html" import confirm_dialog %}
+{% block css %}
+    {{ css_file("libs/plugins/dataTables/dataTables.bootstrap.css") }}
+{% endblock %}
+{% block js %}
+    {{ js_file("libs/plugins/dataTables/jquery.dataTables.min.js") }}
+    {{ js_file("libs/plugins/dataTables/dataTables.bootstrap.js") }}
+    <script>
+        $(function() {
+            var dataTable = $('#dataTable').dataTable({
+                language: {
+                    "url": "{{ url_for('static',filename='libs/plugins/dataTables/Chinese.json') }}"
+                },
+                lengthChange: false,
+
+                pageLength: 10,
+                aaSorting: [[1, "desc"]],
+
+                columnDefs: [{ "orderable": false, "targets": 0 }],
+
+                initComplete: function() {
+                    $("#dataTable").show();
+                    var table_toolbar = $("#table_toolbar").detach();
+                    var toolbar = $("#dataTable_filter").parent().prev();
+                    toolbar.append(table_toolbar);
+                },
+                drawCallback: function() {
+                    var table_select_all = $(".table_select_all");
+                    var table_select_id = $(".table_select_id");
+                    table_select_all.prop("checked", false);
+                    table_select_id.prop("checked", false);
+                    table_select_all.off();
+                    table_select_all.click(function () {
+                        table_select_id.each(function () {
+                            $(this).prop("checked", table_select_all.prop("checked"));
+                        });
+                    });
+                    var table_btn_del = $("#table_btn_del");
+                    table_btn_del.off();
+                    table_btn_del.click(function () {
+
+                        var ids = [];
+                        //alert(window.location.href);
+
+                        var path = location.pathname;
+                        //alert(path);
+                        table_select_id.each(function () {
+                            if ($(this).prop("checked")) {
+                                ids.push($(this).prop("value"));
+                            }
+                        });
+
+                        if(ids.length > 0)
+                        {
+
+                            $("#number_of_items").html(ids.length);
+                            $("#confirm_del").modal('show');
+
+                            var confirm_btn = $("#confirm_del .btn-primary");
+                            confirm_btn.off();
+
+                            confirm_btn.click(function() {
+                                console.log(ids.join(","));
+                                var id_list_string = ids.join(",");
+                                //alert(typeof (id_list_string));
+                                console.log(path);
+                                $("#confirm_del").modal('hide');
+
+                                $.ajax({
+                                    url: "{{ url_for('main.admin_role_del') }}",
+                                    type: "DELETE",
+                                    data: {"ids": id_list_string,"delete_item_name" : path}
+                                }).done(function() {
+                                    location.reload();
+                                });
+                            });
+                        }
+
+                        return false;
+                    });
+                }
+            });
+        } );
+    </script>
+{% endblock %}
+
+{% block mainContent %}
+{#    <div class="container container-fluid">#}
+    <div class="ibox ibox-title">
+    {% block iboxtitle %}{% endblock %}
+    </div>
+    <div class="ibox ibox-content">
+    <div id="table_toolbar" class="btn-group" role="group">
+        <a id="table_btn_new" class='btn btn-primary' href="new"><i class="glyphicon glyphicon-plus"></i> 新建</a>
+        <a id="table_btn_del" class='btn btn-danger' href="#"><i class="glyphicon glyphicon-trash"></i> 删除</a>
+    </div>
+    <table id="dataTable" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%" style="display: none">
+        <thead>
+        <tr>
+            {% block tableHead %}
+            {% endblock %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+            {% set itemLoop = loop %}
+            <tr>
+                {% block tableRow scoped %}
+                {% endblock %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{#    </div>#}
+{% endblock %}
+
+{% block otherContents %}
+    {{ confirm_dialog("confirm_del","删除确认","你确定要删除这<span id='number_of_items'></span>项吗？") }}
+{% endblock %}

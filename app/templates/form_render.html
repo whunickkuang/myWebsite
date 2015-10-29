@@ -1,0 +1,89 @@
+{% macro render_button(back) %}
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">保存</button>
+            {% if back %}
+                <a class="btn btn-primary" href="{{ url_for(back) }}">返回</a>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro render_checks(field) %}
+    <div class="form-group {{ 'has-feedback has-error' if field.errors  }}">
+        {{ field.label(class="col-sm-2 control-label") }}
+        <div class="col-sm-10">
+            {% for value, label, checked in  field.iter_choices() %}
+                <label class="col-sm-3">
+                    <input type="checkbox" name="{{ field.name }}"value="{{ value }}" {{ "checked" if checked }}>
+                    {{ label }}
+                </label>
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_text(field) %}
+    <div class="form-group {{ 'has-feedback has-error' if field.errors  }}">
+        {{ field.label(class="col-sm-2 control-label") }}
+        <div class="col-sm-9">
+            {{ field(class="form-control") }}
+            {% if field.errors %}
+                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if field.errors %}
+        <ul class="form-group" style="margin-top: -10px">
+            {% for error in field.errors %}
+                <li class="col-sm-offset-2 text-danger">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+{% macro render__form_error(field) %}
+    {% if field.errors %}
+        <ul class="col-sm-6">
+            {% for error in field.errors %}
+                <li class="text-danger">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+{#{% macro render__form_error(field) %}#}
+{#    {% if field.errors %}#}
+{#        <ul style="mso-row-margin-right: -6px">#}
+{#            {% for error in field.errors %}#}
+{#                <li class="col-sm-offset-1 text-danger">{{ error }}</li>#}
+{#            {% endfor %}#}
+{#        </ul>#}
+{#    {% endif %}#}
+{#{% endmacro %}#}
+
+{% macro render_url(field) %}
+    <div class="form-group {{ 'has-feedback has-error' if field.errors  }}">
+{#        {{ field.label(class="col-sm-2 control-label") }}#}
+
+         <label class="col-sm-2 control-label" ><a class='btn btn-default' href=# id='generalURL'  >生成链接</a></label>
+        <div class="col-sm-9    ">
+            {{ field(class="form-control") }}
+            {% if field.errors %}
+                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if field.errors %}
+        <ul class="form-group" style="margin-top: -10px">
+            {% for error in field.errors %}
+                <li class="col-sm-offset-2 text-danger">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+

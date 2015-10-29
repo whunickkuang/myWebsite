@@ -1,0 +1,49 @@
+{% extends "admin_edit_base.html" %}
+{% from "html_utils.html" import table_select %}
+{% set activeMenu = "menu_user_management" %}
+{% block otherjs %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var editFlag = '{{ edit_flag }}';
+            if (editFlag == '0') {
+                $('.form-control').attr("readonly", "readonly")
+            }
+        });
+    </script>
+{% endblock %}
+{% block mainTitle %}个人中心{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="active">
+            <a href="{{ url_for("main.user_info" ,userId = current_user.user_id,selected_id=1) }}">主页</a>
+        </li>
+        <li class="active">
+            <strong>{{ current_user.user_name }}</strong>
+        </li>
+    </ol>
+{% endblock %}
+{% block mainContent %}
+    <div class="col col-md-12">
+            <div class="ibox-title">个人信息
+            </div>
+            <div class="ibox-content">
+                <form class="form-horizontal" method="post" action="{{ url_for('main.individual_info', userId=current_user.user_id) }}">
+                    {{ form.hidden_tag() }}
+                    {{ render_text(form.username) }}
+                    {{ render_text(form.company) }}
+                    {{ render_text(form.phone) }}
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {% if edit_flag==1 %}
+                                <button type="submit" class="btn btn-primary">保存</button>
+                            {% endif %}
+                            {% if edit_flag==0 %}
+                                <a class="btn btn-primary"
+                                   href="{{ url_for('main.individual_info', userId=current_user.user_id) }}">编辑</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </form>
+            </div>
+    </div>
+{% endblock %}

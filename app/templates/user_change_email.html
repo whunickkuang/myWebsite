@@ -1,0 +1,39 @@
+{% extends "admin_edit_base.html" %}
+{% from "html_utils.html" import table_select %}
+{% set activeMenu = "menu_user_management" %}
+{% block mainTitle %}个人中心{% endblock %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+    <li>
+        <a href="{{ url_for('main.user_info',userId=current_user.user_id,selected_id=1) }}">主页</a>
+    </li>
+    <li class="active">
+        <strong>修改邮箱</strong>
+    </li>
+    </ol>
+{% endblock %}
+{% block mainContent %}
+    <form class="form-horizontal" method="post" action="{{ url_for('main.change_email') }}">
+        <div class="col col-md-12">
+            <div class="ibox ibox-title"><i class="fa fa-mail"></i>修改邮箱
+            </div>
+            <div class="ibox ibox-content">
+                {{ form.hidden_tag() }}
+                    <div class="row">
+                        <label class="col-sm-2 control-label">当前邮箱</label>
+                        <div class="col-sm-5">{{ email }}</div>
+                    </div>
+                <br>
+                {{ render_text(form.email) }}
+                {{ render_text(form.password) }}
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-5">
+                        <button type="submit" class="btn btn-primary">保存</button>
+                        <a class="btn btn-primary col-sm-offset-1" href="{{ url_for('main.individual_info', userId=current_user.user_id) }}">返回</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
