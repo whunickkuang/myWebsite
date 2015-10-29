@@ -49,6 +49,7 @@ class FlaskClientTestCase(unittest.TestCase):
             'startTime': '2015-8-19',
             'project': 'project1'
         }, follow_redirects=True)
+
         self.assertTrue('test1' in response.data)
 
 
