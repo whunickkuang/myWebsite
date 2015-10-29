@@ -37,7 +37,7 @@ class FlaskClientTestCase(unittest.TestCase):
             'password': 'kuang',
             'password2': 'kuang'
         }, follow_redirects=True)
-        user = BPUser.query.filter_by(user_email='john@example.com').first()
+        #user = BPUser.query.filter_by(user_email='john@example.com').first()
         # print(user.user_id)
         # print(user.user_password_hash)
         self.assertTrue('优秀的桥梁设计软件' in response.data)
