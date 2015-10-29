@@ -81,6 +81,7 @@ def individual_info_show():
     form.username.data = user.user_name
     form.company.data = user.user_company
     form.phone.data = user.user_phone
+
     return render_template("admin_individual.html", form=form, edit_flag=0)
 
 
